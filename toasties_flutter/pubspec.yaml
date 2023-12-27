@@ -85,6 +85,37 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+  fonts:
+
+    - family: Sulphur Point
+      fonts:
+        - asset: assets/fonts/SulphurPoint-Light.ttf
+        - asset: assets/fonts/SulphurPoint-Regular.ttf
+          style: normal
+        - asset: assets/fonts/SulphurPoint-Bold.ttf
+        
+    - family: Overlock
+      fonts:
+        - asset: assets/fonts/Overlock-Regular.ttf
+          style: normal
+        - asset: assets/fonts/Overlock-Black.ttf 
+        - asset: assets/fonts/Overlock-Bold.ttf
+        - asset: assets/fonts/Overlock-Italic.ttf
+          style: italic
+        - asset: assets/fonts/Overlock-BlackItalic.ttf
+        - asset: assets/fonts/Overlock-BoldItalic.ttf
+
+    - family: Segoe UI
+      fonts:
+        - asset: assets/fonts/Segoe UI.ttf
+          style: normal
+        - asset: assets/fonts/Segoe UI Bold.ttf
+        - asset: assets/fonts/Segoe UI Italic.ttf
+          style: italic
+        - asset: assets/fonts/Segoe UI Bold Italic.ttf
+          
+
+
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
