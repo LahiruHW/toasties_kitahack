@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // contains the state of the app
-class StateProvider extends ChangeNotifier {
+class ToastieStateProvider extends ChangeNotifier {
 
 
-  StateProvider();
+  ToastieStateProvider();
 
   void incrementCounter() {
     notifyListeners();
