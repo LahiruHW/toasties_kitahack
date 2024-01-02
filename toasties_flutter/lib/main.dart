@@ -9,8 +9,15 @@ Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  final appRuntime = ChangeNotifierProvider(
-    create: (context) => ToastieStateProvider(),
+  // this is the root of the app:
+  //  - MultiProvider allows for multiple providers to be used
+  //  - ChangeNotifierProvider provides the state of the app
+  final appRuntime = MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) => ToastieStateProvider(),
+      ),
+    ],
     child: const LegalEaseApp(),
   );
 
