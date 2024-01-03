@@ -27,6 +27,10 @@ class ToastiesAppBar extends StatelessWidget implements PreferredSizeWidget {
     ),
   );
 
+  final transparentDeco = const BoxDecoration(
+    color: Colors.transparent,
+  );
+
   @override
   Widget build(BuildContext context) {
     final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
@@ -35,47 +39,53 @@ class ToastiesAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Material(
       // color: Colors.grey.withOpacity(0.06),
       elevation: 0,
-      child: Column(
+      child: Stack(
+        fit: StackFit.expand,
         children: [
-          Container(
-            height: statusBarHeight,
-            width: double.infinity,
-            decoration: gradientDecoration,
-          ),
-          Expanded(
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Container(
-                  width: double.infinity,
-                  decoration: gradientDecoration,
-                ),
-                NavigationToolbar(
-                  centerMiddle: false,
-                  leading: !showBackButton
-                      ? null
-                      : IconButton(
-                          icon: const Icon(Icons.arrow_back),
-                          onPressed: () => showBackButton & canPop
-                              ? Navigator.of(context).pop()
-                              : null,
-                        ),
-                  middle: showTitle
-                      ? Text(
-                          appBarTitle,
-                          style: Theme.of(context).appBarTheme.titleTextStyle,
-                        )
-                      : null,
-                  trailing: trailing,
-                )
-              ],
+          SizedBox.expand(
+            child: Container(
+              decoration: gradientDecoration,
             ),
           ),
-          // Container(
-          //   height: 100,             // play with preferredSize.height to add a searchbar here
-          //   width: double.infinity,
-          //   color: Colors.red,
-          // ),
+          Column(
+            children: [
+              Container(
+                height: statusBarHeight,
+                width: double.infinity,
+                decoration: transparentDeco
+              ),
+              Expanded(
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      decoration: gradientDecoration,
+                    ),
+                    NavigationToolbar(
+                      centerMiddle: false,
+                      leading: !showBackButton
+                          ? null
+                          : IconButton(
+                              icon: const Icon(Icons.arrow_back),
+                              onPressed: () => showBackButton & canPop
+                                  ? Navigator.of(context).pop()
+                                  : null,
+                            ),
+                      middle: showTitle
+                          ? Text(
+                              appBarTitle,
+                              style:
+                                  Theme.of(context).appBarTheme.titleTextStyle,
+                            )
+                          : null,
+                      trailing: trailing,
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
