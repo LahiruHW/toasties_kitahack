@@ -42,6 +42,16 @@ class ToastiesAppTheme {
     ),
     textTheme: ToastiesTextTheme.globalTextTheme,
     useMaterial3: true,
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: blue3,
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.grey,
+      showSelectedLabels: true,
+      showUnselectedLabels: false,
+      type: BottomNavigationBarType.fixed,
+      enableFeedback: true,
+      elevation: 0,
+    ),
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -56,6 +66,16 @@ class ToastiesAppTheme {
     ),
     textTheme: ToastiesTextTheme.globalTextTheme,
     useMaterial3: true,
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: blue2,
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.grey,
+      showSelectedLabels: true,
+      showUnselectedLabels: false,
+      type: BottomNavigationBarType.fixed,
+      enableFeedback: true,
+      elevation: 0,
+    ),
   );
 }
 
