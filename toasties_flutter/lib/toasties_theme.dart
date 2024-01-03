@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
 
+/// Stores the theme data for the LegalEase app (both light and dark)
 class ToastiesAppTheme {
-
-  /// 
+  
   ToastiesAppTheme._(); // ._ removes instantiation capability - this class is just a container for the theme data
 
   static Color blue1 = const Color.fromRGBO(0, 109, 170, 1.0);
