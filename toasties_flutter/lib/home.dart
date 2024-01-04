@@ -1,98 +1,59 @@
+// ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:toasties_flutter/common/widgets/toasties_appbar.dart';
+import 'package:provider/provider.dart';
+import 'package:toasties_flutter/common/state_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
     super.key,
-    required this.title,
   });
-
-  final String title;
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
+  bool isDarkMode = false;
 
-  void _incrementCounter() {
+  // int _selectedIndex = 0;
+
+  void switchColourMode(ToastieStateProvider provider) {
+    final temp = !isDarkMode;
+    provider.updateSettings(
+      isDarkMode: temp,
+    );
     setState(() {
-      _counter++;
+      isDarkMode = temp;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: ToastiesAppBar(
-        appBarTitle: "LegalEase",
-        showBackButton: false,
-        showTitle: true,
-        trailing: IconButton(
-          icon: const Icon(Icons.menu),
-          style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+    return Consumer<ToastieStateProvider>(
+      builder: (context2, provider, child) => Scaffold(        
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Nigga mode:',
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
+              Text(
+                '${isDarkMode ? "ON" : "NAH"}',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+            ],
           ),
-          onPressed: () {},
         ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-              style: Theme.of(context).textTheme.labelSmall,
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
+  
+    floatingActionButton: FloatingActionButton(
+      onPressed: () => switchColourMode(provider),
+    ),
 
 
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-            backgroundColor: Colors.blue,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_rounded),
-            label: 'Chat',
-            backgroundColor: Colors.green,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark_border_rounded),
-            label: 'Saved',
-            backgroundColor: Colors.purple,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_rounded),
-            label: 'Profile',
-            backgroundColor: Colors.purple,
-          ),
-        ],
-        // selectedIconTheme: const IconThemeData(color: Colors.blue, size: 30),
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        // currentIndex: _selectedIndex,
-        // selectedItemColor: Colors.amber[800],
-        // onTap: _onItemTapped,
-      ),
-
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
 }
-
