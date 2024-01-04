@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+// import 'package:go_router/go_router.dart';
 
 const statusBarHeight = 35.0;
 
@@ -31,11 +33,9 @@ class ToastiesAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
-    final bool canPop = parentRoute?.canPop ?? false;
+    final canPop = GoRouter.of(context).canPop();
 
     return Material(
-      // color: Colors.grey.withOpacity(0.06),
       elevation: 0,
       child: Stack(
         fit: StackFit.expand,
@@ -50,7 +50,7 @@ class ToastiesAppBar extends StatelessWidget implements PreferredSizeWidget {
               Container(
                 height: statusBarHeight,
                 width: double.infinity,
-                decoration: transparentDeco
+                decoration: transparentDeco,
               ),
               Expanded(
                 child: Stack(
@@ -62,12 +62,18 @@ class ToastiesAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     NavigationToolbar(
                       centerMiddle: false,
-                      leading: !showBackButton
+                      leading: !(showBackButton & canPop)
                           ? null
                           : IconButton(
-                              icon: const Icon(Icons.arrow_back),
+                              icon: Icon(
+                                Icons.arrow_back,
+                                color: Theme.of(context)
+                                    .appBarTheme
+                                    .titleTextStyle!
+                                    .color,
+                              ),
                               onPressed: () => showBackButton & canPop
-                                  ? Navigator.of(context).pop()
+                                  ? GoRouter.of(context).pop()
                                   : null,
                             ),
                       middle: showTitle

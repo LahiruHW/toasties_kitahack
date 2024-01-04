@@ -43,7 +43,7 @@ class _BaseState extends State<Base> {
       builder: (context2, provider, child) => Scaffold(
         key: globalKey,
         appBar: ToastiesAppBar(
-          showBackButton: false,
+          showBackButton: true,
           showTitle: true,
           trailing: IconButton(
             icon: const Icon(Icons.menu),
