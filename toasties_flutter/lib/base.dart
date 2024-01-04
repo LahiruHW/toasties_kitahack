@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:toasties_flutter/common/state_provider.dart';
 import 'package:toasties_flutter/common/widgets/bottom_nav_bar.dart';
+import 'package:toasties_flutter/common/widgets/side_nav_drawer.dart';
 import 'package:toasties_flutter/common/widgets/toasties_appbar.dart';
 
 class Base extends StatefulWidget {
@@ -20,12 +21,15 @@ class Base extends StatefulWidget {
 
 class _BaseState extends State<Base> {
 
+  final GlobalKey<ScaffoldState> globalKey = GlobalKey();
+
   bool isDarkMode = false;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ToastieStateProvider>(
-      builder: (context, provider, child) => Scaffold(
+      builder: (context2, provider, child) => Scaffold(
+        key: globalKey,
         appBar: ToastiesAppBar(
           appBarTitle: "LegalEase",
           showBackButton: false,
@@ -35,13 +39,16 @@ class _BaseState extends State<Base> {
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
             ),
-            onPressed: () {},
+            onPressed: () => globalKey.currentState!.openEndDrawer(),
+
           ),
         ),
 
         body: widget.bodyWidget,
 
-        bottomNavigationBar: const ToastiesBottomNavBar()
+        endDrawer: const ToastiesSideNavMenu(),
+
+        bottomNavigationBar: const ToastiesBottomNavBar(),
 
       ),
     );
