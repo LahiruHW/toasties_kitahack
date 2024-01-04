@@ -7,13 +7,11 @@ class ToastiesAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// that deals with the positioning of the [leading], [middle] and [trailing] widgets
   const ToastiesAppBar({
     super.key,
-    required this.appBarTitle,
     this.showBackButton = false,
     this.showTitle = true,
     this.trailing,
   });
 
-  final String appBarTitle;
   final bool showBackButton;
   final bool showTitle;
   final Widget? trailing;
@@ -74,7 +72,7 @@ class ToastiesAppBar extends StatelessWidget implements PreferredSizeWidget {
                             ),
                       middle: showTitle
                           ? Text(
-                              appBarTitle,
+                              "LegalEase",
                               style:
                                   Theme.of(context).appBarTheme.titleTextStyle,
                             )
