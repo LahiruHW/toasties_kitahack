@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:toasties_flutter/common/state_provider.dart';
-import 'package:toasties_flutter/home.dart';
+import 'package:toasties_flutter/common/toastie_router.dart';
 import 'package:toasties_flutter/toasties_theme.dart';
 
 Future<void> main() async {
@@ -39,17 +39,18 @@ class LegalEaseApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'LegalEase',
-      themeMode: ThemeMode.system,
-      theme: ToastiesAppTheme.lightTheme,
-      darkTheme: ToastiesAppTheme.darkTheme,
-      themeAnimationDuration: const Duration(milliseconds: 500),
-      themeAnimationCurve: Curves.easeInOut,
-      debugShowCheckedModeBanner: false,
-      home: const HomePage(title: 'Flutter Demo Home Page'),
+    return Consumer<ToastieStateProvider>(
+      builder: (context, provider, child) => MaterialApp.router(
+        routerConfig: ToastieRouter.router,
+        title: 'LegalEase',
+        themeMode:
+            provider.settings.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+        theme: ToastiesAppTheme.lightTheme,
+        darkTheme: ToastiesAppTheme.darkTheme,
+        themeAnimationDuration: const Duration(milliseconds: 500),
+        themeAnimationCurve: Curves.easeInOut,
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }
-
-
