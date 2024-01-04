@@ -14,19 +14,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool isDarkMode = false;
-
-  // int _selectedIndex = 0;
-
-  void switchColourMode(ToastieStateProvider provider) {
-    final temp = !isDarkMode;
-    provider.updateSettings(
-      isDarkMode: temp,
-    );
-    setState(() {
-      isDarkMode = temp;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,17 +28,12 @@ class _HomePageState extends State<HomePage> {
                 style: Theme.of(context).textTheme.labelSmall,
               ),
               Text(
-                '${isDarkMode ? "ON" : "NAH"}',
+                '${provider.settings.isDarkMode ? "ON" : "NAH"}',
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ],
           ),
         ),
-  
-    floatingActionButton: FloatingActionButton(
-      onPressed: () => switchColourMode(provider),
-    ),
-
 
       ),
     );

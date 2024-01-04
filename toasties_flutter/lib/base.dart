@@ -25,13 +25,24 @@ class _BaseState extends State<Base> {
 
   bool isDarkMode = false;
 
+  // int _selectedIndex = 0;
+
+  void switchColourMode(ToastieStateProvider provider) {
+    final temp = !isDarkMode;
+    provider.updateSettings(
+      isDarkMode: temp,
+    );
+    setState(() {
+      isDarkMode = temp;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ToastieStateProvider>(
       builder: (context2, provider, child) => Scaffold(
         key: globalKey,
         appBar: ToastiesAppBar(
-          appBarTitle: "LegalEase",
           showBackButton: false,
           showTitle: true,
           trailing: IconButton(
@@ -49,6 +60,11 @@ class _BaseState extends State<Base> {
         endDrawer: const ToastiesSideNavMenu(),
 
         bottomNavigationBar: const ToastiesBottomNavBar(),
+
+        floatingActionButton: FloatingActionButton(
+          child: provider.settings.isDarkMode ? const Icon(Icons.dark_mode) : const Icon(Icons.light_mode),
+          onPressed: () => switchColourMode(provider),
+        )
 
       ),
     );
