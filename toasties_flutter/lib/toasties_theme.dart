@@ -41,7 +41,6 @@ class ToastiesAppTheme {
       iconTheme: const IconThemeData(color: Colors.white),
     ),
     textTheme: ToastiesTextTheme.globalTextTheme,
-    useMaterial3: true,
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: blue3,
       selectedItemColor: Colors.white,
@@ -52,6 +51,16 @@ class ToastiesAppTheme {
       enableFeedback: true,
       elevation: 0,
     ),
+    navigationDrawerTheme: NavigationDrawerThemeData(
+      elevation: 10.0,
+      backgroundColor: Colors.white,
+      // labelTextStyle: MaterialStateProperty.all<TextStyle>(
+      //   ToastiesTextTheme.bodyStyle.copyWith(
+      //     color: Colors.black,
+      //   ),
+      // ),
+    ),
+    useMaterial3: true,
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -65,7 +74,6 @@ class ToastiesAppTheme {
       iconTheme: const IconThemeData(color: Colors.white),
     ),
     textTheme: ToastiesTextTheme.globalTextTheme,
-    useMaterial3: true,
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: blue2,
       selectedItemColor: Colors.white,
@@ -76,6 +84,16 @@ class ToastiesAppTheme {
       enableFeedback: true,
       elevation: 0,
     ),
+    navigationDrawerTheme: NavigationDrawerThemeData(
+      elevation: 10.0,
+      backgroundColor: const Color.fromARGB(255, 58, 58, 58),
+      // labelTextStyle: MaterialStateProperty.all<TextStyle>(
+      //   ToastiesTextTheme.headingStyle.copyWith(
+      //     color: Colors.white,
+      //   ),
+      // ),
+    ),
+    useMaterial3: true,
   );
 }
 
