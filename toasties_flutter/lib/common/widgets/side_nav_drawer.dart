@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:go_router/go_router.dart';
+import 'package:go_router/go_router.dart';
 
 class ToastiesSideNavMenu extends StatelessWidget {
   const ToastiesSideNavMenu({
@@ -33,21 +33,21 @@ class ToastiesSideNavMenu extends StatelessWidget {
           title: const Text('Notifications'),
           titleTextStyle: Theme.of(context).textTheme.headlineSmall,
           onTap: () {},
-          // onTap: () => GoRouter.of(context).go('/notifications'),
+          // onTap: () => GoRouter.of(context).push('/notifications'),
         ),
         ListTile(
           leading: const Icon(Icons.person_outline_rounded),
           title: const Text('My Profile'),
           titleTextStyle: Theme.of(context).textTheme.headlineSmall,
           onTap: () {},
-          // onTap: () => GoRouter.of(context).go('/profile'),
+          // onTap: () => GoRouter.of(context).push('/profile'),
         ),
         ListTile(
           leading: const Icon(Icons.settings_outlined),
           title: const Text('Settings'),
           titleTextStyle: Theme.of(context).textTheme.headlineSmall,
-          onTap: () {},
-          // onTap: () => GoRouter.of(context).go('/settings'),
+          // onTap: () {},
+          onTap: () => GoRouter.of(context).push('/settings'),
         ),
       ],
     );

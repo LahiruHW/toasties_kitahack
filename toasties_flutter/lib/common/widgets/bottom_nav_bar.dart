@@ -27,16 +27,16 @@ class _ToastiesBottomNavBarState extends State<ToastiesBottomNavBar> {
 
     switch (index) {
       case 0:
-        GoRouter.of(context).go('/home');
+        GoRouter.of(context).push('/home');
         break;
       case 1:
-        GoRouter.of(context).go('/chat');
+        GoRouter.of(context).push('/chat');
         break;
       case 2:
-        GoRouter.of(context).go('/saved');
+        GoRouter.of(context).push('/saved');
         break;
       case 3:
-        GoRouter.of(context).go('/profile');
+        GoRouter.of(context).push('/profile');
         break;
     }
   }
