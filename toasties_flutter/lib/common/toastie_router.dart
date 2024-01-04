@@ -8,21 +8,16 @@ import 'package:toasties_flutter/saved.dart';
 
 class ToastieRouter {
   static final GoRouter router = GoRouter(
-    
-    initialLocation: '/',
-
+    initialLocation: '/home',
     routes: <RouteBase>[
-      // StatefulShellRoute.indexedStack(branches: branches)
-
-      GoRoute(
-        path: '/',
-        pageBuilder: (context, state) => const MaterialPage(
-          child: Base(
-            bodyWidget: HomePage(),
-          ),
-        ),
-      ),
-
+      // GoRoute(
+      //   path: '/',
+      //   pageBuilder: (context, state) => const MaterialPage(
+      //     child: Base(
+      //       bodyWidget: HomePage(),
+      //     ),
+      //   ),
+      // ),
       ShellRoute(
         routes: [
           GoRoute(
