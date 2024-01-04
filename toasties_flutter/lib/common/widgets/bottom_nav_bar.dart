@@ -27,16 +27,28 @@ class _ToastiesBottomNavBarState extends State<ToastiesBottomNavBar> {
 
     switch (index) {
       case 0:
-        GoRouter.of(context).push('/home');
+        GoRouter.of(context).push(
+          '/home',
+          extra: {'bottomNavbarIndex': 0},
+        );
         break;
       case 1:
-        GoRouter.of(context).push('/chat');
+        GoRouter.of(context).push(
+          '/chat',
+          extra: {'bottomNavbarIndex': 1},
+        );
         break;
       case 2:
-        GoRouter.of(context).push('/saved');
+        GoRouter.of(context).push(
+          '/saved',
+          extra: {'bottomNavbarIndex': 2},
+        );
         break;
       case 3:
-        GoRouter.of(context).push('/profile');
+        GoRouter.of(context).push(
+          '/profile',
+          extra: {'bottomNavbarIndex': 3},
+        );
         break;
     }
   }
@@ -45,7 +57,8 @@ class _ToastiesBottomNavBarState extends State<ToastiesBottomNavBar> {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       elevation: 1,
-      currentIndex: selectedIndex,
+      // currentIndex: selectedIndex,
+      currentIndex: (GoRouterState.of(context).extra as Map<String, dynamic>?)?['bottomNavbarIndex'] ?? 0,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home_outlined),
