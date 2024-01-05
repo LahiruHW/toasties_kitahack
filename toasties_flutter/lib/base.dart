@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:toasties_flutter/common/state_provider.dart';
+import 'package:toasties_flutter/common/providers/state_provider.dart';
 import 'package:toasties_flutter/common/widgets/bottom_nav_bar.dart';
 import 'package:toasties_flutter/common/widgets/side_nav_drawer.dart';
 import 'package:toasties_flutter/common/widgets/toasties_appbar.dart';
