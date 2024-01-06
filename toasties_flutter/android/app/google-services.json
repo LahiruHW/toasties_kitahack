@@ -12,7 +12,20 @@
           "package_name": "com.example.toasties_flutter"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "759364394351-2k91dsf3mfo2k7hd4b8d887hqkp0u1tt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.toasties_flutter",
+            "certificate_hash": "adaf3069751256433edea78e3e6942603acbc2fb"
+          }
+        },
+        {
+          "client_id": "759364394351-cqd4p1i9d8hgh617mjj5t5g410la4gih.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCj1ojGvNVPsRbJ41C9GFeXk3HITd0p6nY"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "759364394351-cqd4p1i9d8hgh617mjj5t5g410la4gih.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "759364394351-9v5c5cdb8us63slqu3l21u2ale58hju3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.toastiesFlutter"
+              }
+            }
+          ]
         }
       }
     }
