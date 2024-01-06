@@ -11,19 +11,6 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      // appBar: ToastiesAppBar(
-      //   appBarTitle: "LegalEase",
-      //   showBackButton: false,
-      //   showTitle: true,
-      //   trailing: IconButton(
-      //     icon: const Icon(Icons.menu),
-      //     style: ButtonStyle(
-      //       foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-      //     ),
-      //     onPressed: () {},
-      //   ),
-      // ),
       body: Center(
         child: Text(
           'Profile Page',
