@@ -114,7 +114,15 @@ class _LoginTypeSelectPageState extends State<LoginTypeSelectPage> {
                 child: Container(),
               ),
               const ToastiesThemeModeToggle()
-            ],
+            ]
+                .animate(
+                  delay: 800.ms,
+                  interval: 50.ms,
+                )
+                .fadeIn(
+                  duration: 1000.ms,
+                  curve: Curves.easeInOut,
+                ),
           ),
         ),
       ),
