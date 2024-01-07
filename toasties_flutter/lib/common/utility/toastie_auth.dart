@@ -5,7 +5,7 @@ class ToastiesAuthService {
   static final FirebaseAuth auth = FirebaseAuth.instance;
 
   /// Sign-in with email and password - returns a UserCredential object
-  Future<UserCredential> signInWithEmailAndPassword(
+  static Future<UserCredential> signInWithEmailAndPassword (
       String email, String password) async {
     try {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
@@ -24,7 +24,6 @@ class ToastiesAuthService {
     try {
       // Create a new provider
       GoogleAuthProvider googleProvider = GoogleAuthProvider();
-      // UserCredential userCredential = await auth.signInWithPopup(googleProvider); // Once signed in, return the UserCredential
       UserCredential userCredential = await auth.signInWithProvider(googleProvider);
       return userCredential;
     } on FirebaseAuthException catch (e) {

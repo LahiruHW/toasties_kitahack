@@ -1,9 +1,14 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 import 'package:toasties_flutter/common/utility/toastie_auth.dart';
+// import 'package:toasties_flutter/common/utility/toastie_router.dart';
 import 'package:toasties_flutter/common/widgets/colour_switch_toggle.dart';
 import 'package:toasties_flutter/common/widgets/google_action_button.dart';
 import 'package:toasties_flutter/common/widgets/legalease_action_button.dart';
@@ -27,7 +32,11 @@ class _LoginTypeSelectPageState extends State<LoginTypeSelectPage> {
     super.initState();
     authStateChangesMonitor =
         ToastiesAuthService.auth.authStateChanges().listen((User? user) {
-      setState(() => this.user = user);
+      if (user == null) {
+        print("User is currently signed out!");
+      } else {
+        setState(() => this.user = user);
+      }
     });
   }
 
@@ -54,7 +63,7 @@ class _LoginTypeSelectPageState extends State<LoginTypeSelectPage> {
               ),
               const SizedBox(height: 15),
               GoogleActionButton(
-                onPressed: () => ToastiesAuthService.signInWithGoogle(),
+                onPressed: () => ToastiesAuthService.signInWithGoogle(), // update the user state
                 title: "Login with Google",
                 titleColor: Theme.of(context)
                             .colorScheme
@@ -66,7 +75,12 @@ class _LoginTypeSelectPageState extends State<LoginTypeSelectPage> {
               ),
               const SizedBox(height: 15),
               LegalEaseActionButton(
-                onPressed: () {},
+                onPressed: () => GoRouter.of(context).push(
+                  "/login-uac",
+                  extra: {
+                    "onFormSubmitted": ToastiesAuthService.signInWithEmailAndPassword,
+                  },
+                ),
                 title: "Login with LegalEase account",
                 titleColor: Theme.of(context)
                             .colorScheme
