@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -25,7 +28,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -43,16 +49,6 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDKpiPxed4q9XGS_VzVM6f4RFMg_1_itNU',
-    appId: '1:759364394351:web:f92532e6485802bda4dc9a',
-    messagingSenderId: '759364394351',
-    projectId: 'toasties-kitahack-2024',
-    authDomain: 'toasties-kitahack-2024.firebaseapp.com',
-    storageBucket: 'toasties-kitahack-2024.appspot.com',
-    measurementId: 'G-C4XZ1138GN',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCj1ojGvNVPsRbJ41C9GFeXk3HITd0p6nY',
     appId: '1:759364394351:android:c65f5849c4fedb4da4dc9a',
@@ -67,15 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '759364394351',
     projectId: 'toasties-kitahack-2024',
     storageBucket: 'toasties-kitahack-2024.appspot.com',
+    androidClientId: '759364394351-2k91dsf3mfo2k7hd4b8d887hqkp0u1tt.apps.googleusercontent.com',
+    iosClientId: '759364394351-9v5c5cdb8us63slqu3l21u2ale58hju3.apps.googleusercontent.com',
     iosBundleId: 'com.example.toastiesFlutter',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyC3f39_01wrfIm0iC7TBRTXl9IhBgTAW-k',
-    appId: '1:759364394351:ios:568ad8b35939de0aa4dc9a',
-    messagingSenderId: '759364394351',
-    projectId: 'toasties-kitahack-2024',
-    storageBucket: 'toasties-kitahack-2024.appspot.com',
-    iosBundleId: 'com.example.toastiesFlutter.RunnerTests',
   );
 }
