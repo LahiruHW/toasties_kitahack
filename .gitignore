@@ -2,3 +2,4 @@
 .vscode/
 .env
 env4toasties.g.dart
+setup_gemini.sh
