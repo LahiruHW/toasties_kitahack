@@ -4,10 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:toasties_flutter/chat.dart';
 import 'package:toasties_flutter/base.dart';
 import 'package:toasties_flutter/common/settings_page.dart';
-import 'package:toasties_flutter/entrance_base.dart';
 import 'package:toasties_flutter/home.dart';
-import 'package:toasties_flutter/login_legalease.dart';
-import 'package:toasties_flutter/login_select.dart';
+import 'package:toasties_flutter/login/entrance_base.dart';
+import 'package:toasties_flutter/login/login_legalease.dart';
+import 'package:toasties_flutter/login/login_select.dart';
 import 'package:toasties_flutter/profile.dart';
 import 'package:toasties_flutter/saved.dart';
 

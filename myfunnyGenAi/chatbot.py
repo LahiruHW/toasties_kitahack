@@ -1,5 +1,21 @@
 import google.generativeai as genai 
 
+
+'''
+Commented code, that converts an image into a blob for if you want the AI to accept multimodal input
+'''
+# img = Image.open('1.jpeg')
+# byte_arr=  io.BytesIO()
+# img.save(byte_arr, format=img.format)
+# byte_arr = byte_arr.getvalue()
+# encoded_image_data = base64.b64encode(byte_arr)
+
+# image_blob = {
+#     'mime_type': 'image/jpeg',
+#     'data': encoded_image_data.decode('utf-8')
+# }
+
+
 # Configure the API key
 def initialise():
     while True:

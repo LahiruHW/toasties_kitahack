@@ -2,7 +2,7 @@ import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 // import 'package:brio_app/state/brio_appstate_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:toasties_flutter/common/state_provider.dart';
+import 'package:toasties_flutter/common/providers/state_provider.dart';
 
 class ToastiesThemeModeToggle extends StatefulWidget {
   const ToastiesThemeModeToggle({

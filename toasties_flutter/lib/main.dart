@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:toasties_flutter/common/providers/state_provider.dart';
-import 'package:toasties_flutter/common/toastie_router.dart';
+import 'package:toasties_flutter/common/utility/toastie_router.dart';
 import 'package:toasties_flutter/toasties_theme.dart';
 
 Future<void> main() async {
