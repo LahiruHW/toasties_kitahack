@@ -78,6 +78,13 @@ class ToastiesAppTheme {
         ),
       ),
     ),
+    cardTheme: CardTheme(
+      color: Colors.white,
+      elevation: 10,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+    ),
     useMaterial3: true,
   );
 
@@ -129,6 +136,13 @@ class ToastiesAppTheme {
         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
           const EdgeInsets.all(15),
         ),
+      ),
+    ),
+    cardTheme: CardTheme(
+      color: Colors.white,
+      elevation: 10,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
       ),
     ),
     useMaterial3: true,

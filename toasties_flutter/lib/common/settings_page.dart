@@ -31,6 +31,11 @@ class _SettingsPageState extends State<SettingsPage> {
             child: NavigationToolbar(
               centerMiddle: false,
               leading: IconButton(
+                style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(
+                    Colors.transparent,
+                  ),
+                ),
                 icon: Icon(
                   Icons.arrow_back,
                   color: Theme.of(context)

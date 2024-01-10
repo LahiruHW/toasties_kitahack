@@ -107,7 +107,6 @@ class _LoginLegalEaseState extends State<LoginLegalEase> {
                     .titleLarge!
                     .copyWith(fontSize: 40),
               ),
-              const SizedBox(height: 60),
               Text(
                 "Enter your LegalEase account details below",
                 style: Theme.of(context).textTheme.bodySmall,
@@ -131,7 +130,7 @@ class _LoginLegalEaseState extends State<LoginLegalEase> {
                           .copyWith(color: Colors.black),
                       decoration: InputDecoration(
                         // fillColor: Colors.transparent,
-                        suffix: isEmailValid
+                        suffixIcon: isEmailValid
                             ? const Icon(Icons.check, color: Colors.green)
                             : null,
                       ),
