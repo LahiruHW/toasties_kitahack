@@ -1,8 +1,10 @@
 // ignore_for_file: avoid_print
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Settings {
   late bool isDarkMode;
-  late DateTime? lastUpdated;
+  late Timestamp? lastUpdated;
   late String? lastUpdatedString;
 
   Settings({
@@ -16,8 +18,8 @@ class Settings {
     DateTime? lastUpdated,
     String? lastUpdatedString,
   }) {
-    final currrentTimeStamp = DateTime.now();
-    final currrentTimeStampString = currrentTimeStamp.toIso8601String(); // for debugging
+    final currrentTimeStamp = Timestamp.now();
+    final currrentTimeStampString = currrentTimeStamp.toDate().toIso8601String(); // for debugging
 
     this.isDarkMode = isDarkMode ?? this.isDarkMode;
     this.lastUpdated = currrentTimeStamp;
