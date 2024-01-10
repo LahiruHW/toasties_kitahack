@@ -62,8 +62,9 @@ class ToastiesAuthService {
 
   static String getRandomName() {
     final WordGenerator wordGenerator = WordGenerator();
-    final randomVerb = wordGenerator.randomVerb();
-    final randomNoun = wordGenerator.randomNoun();
-    return "$randomVerb's $randomNoun";
+    final PasswordGenerator passwordGenerator = PasswordGenerator();
+    final randomName = wordGenerator.randomName().split(" ")[0];
+    final randString = passwordGenerator.generatePassword();
+    return "$randomName$randString".trim().substring(0,8);
   }
 }

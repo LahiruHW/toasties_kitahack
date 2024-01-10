@@ -42,8 +42,7 @@ class _SignupLegalEaseState extends State<SignupLegalEase> {
   String? validateUsername(value) {
     String? retVal = "";
     if (value.isEmpty) {
-      retVal =
-          "if you don't enter an email address, one will be generated for you";
+      retVal = "Optional (or generate one for yourself with the '?' :D)";
     } else {
       retVal = null;
     }
@@ -182,9 +181,6 @@ class _SignupLegalEaseState extends State<SignupLegalEase> {
                           .labelMedium!
                           .copyWith(color: Colors.black),
                       decoration: InputDecoration(
-                        errorText: isUsernameValid
-                            ? null
-                            : "Optional (or generate one for yourself with the '?' :D)",
                         errorStyle: const TextStyle(
                           color: Colors.green,
                         ),

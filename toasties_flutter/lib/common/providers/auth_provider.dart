@@ -21,7 +21,7 @@ class ToastieAuthProvider extends ChangeNotifier {
 
   // final WordGenerator wordGenerator = WordGenerator();
 
-  ToastieAuthProvider({User? user}) {
+  ToastieAuthProvider() {
     debugPrint('------------------------------ AuthProvider initialized');
   }
 
@@ -31,9 +31,8 @@ class ToastieAuthProvider extends ChangeNotifier {
     // if the current user is not null, sign out first
     if (user != null) {
       ToastiesAuthService.signOut().then((value) {
-        user = null;
         debugPrint(
-            '------------------------------ AuthProvider user signed out');
+            '------------------------------ AuthProvider user was forcibly signed out');
       });
     }
 
