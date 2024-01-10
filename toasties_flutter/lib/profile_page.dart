@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +30,7 @@ class ProfilePage extends StatelessWidget {
                       // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         CachedNetworkImage(
-                          imageUrl: provider.user.photoURL ?? "",
+                          imageUrl: provider.user!.photoURL ?? "",
                           width: 100,
                           height: 100,
                           alignment: Alignment.center,
@@ -42,6 +44,9 @@ class ProfilePage extends StatelessWidget {
                             Icons.account_box_rounded,
                             size: 100,
                           ),
+                          errorListener: (errorObj) => print(
+                              "======== Error loading profile image: $errorObj"),
+                          useOldImageOnUrlChange: true,
                         ),
                         Expanded(
                           child: Center(
@@ -50,7 +55,7 @@ class ProfilePage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${provider.user.displayName}',
+                                  '${provider.user!.displayName}',
                                   textAlign: TextAlign.start,
                                   style: Theme.of(context)
                                       .textTheme
@@ -58,12 +63,18 @@ class ProfilePage extends StatelessWidget {
                                       .copyWith(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 35,
+                                        color: Colors.black,
                                       ),
                                 ),
                                 Text(
-                                  '${provider.user.email}',
+                                  '${provider.user!.email}',
                                   textAlign: TextAlign.start,
-                                  style: Theme.of(context).textTheme.labelSmall,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall!
+                                      .copyWith(
+                                        color: Colors.black,
+                                      ),
                                 ),
                               ],
                             ),
@@ -89,7 +100,7 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               Text(
-                '${provider.user.uid}',
+                '${provider.user!.uid}',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
