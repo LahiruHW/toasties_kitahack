@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:toasties_flutter/chat.dart';
 import 'package:toasties_flutter/base.dart';
+import 'package:toasties_flutter/chat_page.dart';
 import 'package:toasties_flutter/common/settings_page.dart';
 import 'package:toasties_flutter/home.dart';
 import 'package:toasties_flutter/login/entrance_base.dart';

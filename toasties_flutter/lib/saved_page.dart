@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
-// import 'package:toasties_flutter/common/widgets/toasties_appbar.dart';
 
-class ChatPage extends StatelessWidget {
-  const ChatPage({
+class SavedPage extends StatelessWidget{
+  const SavedPage({
     super.key,
   });
-
-  static const String routeName = '/chat';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: Text(
-          'Chat Page',
+          'Saved Page',
           style: Theme.of(context).textTheme.headlineLarge,
         ),
       ),

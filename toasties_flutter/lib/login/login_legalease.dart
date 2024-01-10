@@ -107,6 +107,7 @@ class _LoginLegalEaseState extends State<LoginLegalEase> {
                     .titleLarge!
                     .copyWith(fontSize: 40),
               ),
+              const SizedBox(height: 60),
               Text(
                 "Enter your LegalEase account details below",
                 style: Theme.of(context).textTheme.bodySmall,
@@ -188,7 +189,7 @@ class _LoginLegalEaseState extends State<LoginLegalEase> {
                               _pwdController.text,
                             ).then(
                               (userCred) {
-                                authProvider.changeUserInstance(userCred.user!);
+                                authProvider.setUserInstance(userCred.user!);
                                 // SET STATE PROVIDER SETTINGS HERE (use async function)
                                 GoRouter.of(context).go("/home");
                               },

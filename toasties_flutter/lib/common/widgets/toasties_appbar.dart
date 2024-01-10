@@ -65,12 +65,14 @@ class ToastiesAppBar extends StatelessWidget implements PreferredSizeWidget {
                       leading: !(showBackButton & canPop)
                           ? null
                           : IconButton(
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.arrow_back,
-                                color: Theme.of(context)
-                                    .appBarTheme
-                                    .titleTextStyle!
-                                    .color,
+                                color: Colors.white,
+                              ),
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.transparent,
+                                ),
                               ),
                               onPressed: () => showBackButton & canPop
                                   ? GoRouter.of(context).pop()

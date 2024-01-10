@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
 
 /// Stores the theme data for the LegalEase app (both light and dark)
 class ToastiesAppTheme {
-  
   ToastiesAppTheme._(); // ._ removes instantiation capability - this class is just a container for the theme data
 
   static Color blue1 = const Color.fromRGBO(0, 109, 170, 1.0);
@@ -51,14 +49,34 @@ class ToastiesAppTheme {
       enableFeedback: true,
       elevation: 0,
     ),
-    navigationDrawerTheme: NavigationDrawerThemeData(
+    navigationDrawerTheme: const NavigationDrawerThemeData(
       elevation: 10.0,
       backgroundColor: Colors.white,
-      // labelTextStyle: MaterialStateProperty.all<TextStyle>(
-      //   ToastiesTextTheme.bodyStyle.copyWith(
-      //     color: Colors.black,
-      //   ),
-      // ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      fillColor: Colors.white,
+      filled: true,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide.none,
+      ),
+      contentPadding: const EdgeInsets.symmetric(
+        vertical: 15,
+        horizontal: 20,
+      ),
+    ),
+    iconButtonTheme: IconButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all<Color>(blue2),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+          const EdgeInsets.all(15),
+        ),
+      ),
     ),
     useMaterial3: true,
   );
@@ -84,14 +102,34 @@ class ToastiesAppTheme {
       enableFeedback: true,
       elevation: 0,
     ),
-    navigationDrawerTheme: NavigationDrawerThemeData(
+    navigationDrawerTheme: const NavigationDrawerThemeData(
       elevation: 10.0,
-      backgroundColor: const Color.fromARGB(255, 58, 58, 58),
-      // labelTextStyle: MaterialStateProperty.all<TextStyle>(
-      //   ToastiesTextTheme.headingStyle.copyWith(
-      //     color: Colors.white,
-      //   ),
-      // ),
+      backgroundColor: Color.fromARGB(255, 58, 58, 58),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      fillColor: Colors.white,
+      filled: true,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide.none,
+      ),
+      contentPadding: const EdgeInsets.symmetric(
+        vertical: 15,
+        horizontal: 20,
+      ),
+    ),
+    iconButtonTheme: IconButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all<Color>(blue2),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+          const EdgeInsets.all(15),
+        ),
+      ),
     ),
     useMaterial3: true,
   );
@@ -150,5 +188,4 @@ class ToastiesTextTheme {
     labelMedium: ToastiesTextTheme.labelStyle.copyWith(fontSize: 18),
     labelSmall: ToastiesTextTheme.labelStyle.copyWith(fontSize: 16),
   );
-
 }

@@ -70,7 +70,7 @@ class _LoginTypeSelectPageState extends State<LoginTypeSelectPage> {
                   onPressed: () {
                     ToastiesAuthService.signInWithGoogle().then(
                       (userCred) {
-                        authProvider.changeUserInstance(userCred.user!);
+                        authProvider.setUserInstance(userCred.user!);
                         // SET STATE PROVIDER SETTINGS HERE (use async function)
                         GoRouter.of(context).go("/home");
                       },
