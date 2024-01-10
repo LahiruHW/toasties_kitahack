@@ -119,7 +119,8 @@ class _LoginTypeSelectPageState extends State<LoginTypeSelectPage> {
                             ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            print("Sign-up clicked");
+                            debugPrint("===================== Sign-up clicked");
+                            GoRouter.of(context).push("/signup-uac");
                           },
                       ),
                       TextSpan(

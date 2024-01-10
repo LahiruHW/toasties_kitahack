@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:toasties_flutter/base.dart';
-import 'package:toasties_flutter/chat_page.dart';
-import 'package:toasties_flutter/common/settings_page.dart';
-import 'package:toasties_flutter/home.dart';
 import 'package:toasties_flutter/login/entrance_base.dart';
 import 'package:toasties_flutter/login/login_legalease.dart';
 import 'package:toasties_flutter/login/login_select.dart';
-import 'package:toasties_flutter/profile.dart';
-import 'package:toasties_flutter/saved.dart';
+import 'package:toasties_flutter/login/signup_legalease.dart';
+import 'package:toasties_flutter/home_page.dart';
+import 'package:toasties_flutter/chat_page.dart';
+import 'package:toasties_flutter/saved_page.dart';
+import 'package:toasties_flutter/profile_page.dart';
+import 'package:toasties_flutter/common/settings_page.dart';
 
 class ToastieRouter {
   static final GoRouter router = GoRouter(
@@ -36,7 +37,6 @@ class ToastieRouter {
           GoRoute(
             name: "login-uac",
             path: '/login-uac',
-            // custom page transition to slide the page in from the right side
             pageBuilder: (context, state) => CustomTransitionPage(
               barrierColor:
                   Theme.of(context).colorScheme.background.computeLuminance() <
@@ -50,6 +50,24 @@ class ToastieRouter {
                 // ideally I prefer a PageView-like slide transition,
                 // but I got no idea how to do that within GoRouter()
                 // (the normal SlideTransition only works for the incoming page)
+                return FadeTransition(opacity: anim1, child: child);
+              },
+              maintainState: true,
+            ),
+          ),
+          GoRoute(
+            name: "signup-uac",
+            path: '/signup-uac',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              barrierColor:
+                  Theme.of(context).colorScheme.background.computeLuminance() <
+                          0.5
+                      ? Colors.black.withOpacity(0.5)
+                      : Colors.white.withOpacity(0.5),
+              transitionDuration: const Duration(milliseconds: 500),
+              reverseTransitionDuration: const Duration(milliseconds: 500),
+              child: const SignupLegalEase(),
+              transitionsBuilder: (context, anim1, anim2, child) {
                 return FadeTransition(opacity: anim1, child: child);
               },
               maintainState: true,

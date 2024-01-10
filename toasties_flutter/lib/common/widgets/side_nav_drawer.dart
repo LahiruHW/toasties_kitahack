@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:toasties_flutter/common/utility/toastie_auth.dart';
 
 class ToastiesSideNavMenu extends StatelessWidget {
   const ToastiesSideNavMenu({
@@ -48,6 +49,18 @@ class ToastiesSideNavMenu extends StatelessWidget {
           titleTextStyle: Theme.of(context).textTheme.headlineSmall,
           // onTap: () {},
           onTap: () => GoRouter.of(context).push('/settings'),
+        ),
+        ListTile(
+          leading: const Icon(Icons.logout, color: Colors.red,),
+          title: const Text('Log Out'),
+          titleTextStyle: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                color: Theme.of(context).colorScheme.error,
+              ),
+          onTap: () {
+            ToastiesAuthService.signOut().then(
+              (value) => GoRouter.of(context).go('/login-base'),
+            );
+          },
         ),
       ],
     );
