@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:toasties_flutter/common/entity/message.dart';
 
 class Chat{
@@ -6,10 +7,12 @@ class Chat{
   Chat({
     this.chatName = "New Consultation",
     this.msgs,
+    this.timeSaved,
   });
 
   String? chatName;
   List<Message>? msgs;
+  Timestamp? timeSaved;
 
   void addMessage(Message message){
     msgs ??= [];
