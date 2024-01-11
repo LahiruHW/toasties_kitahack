@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:toasties_flutter/common/providers/auth_provider.dart';
-import 'package:toasties_flutter/common/providers/state_provider.dart';
+// import 'package:toasties_flutter/common/providers/state_provider.dart';
 import 'package:toasties_flutter/common/utility/toastie_auth.dart';
 
 /// Login page for LegalEase User Accounts, does not validate password for obvious reasons
@@ -47,14 +47,14 @@ class _LoginLegalEaseState extends State<LoginLegalEase> {
     return retVal;
   }
 
-  void getEmailValidStatus(value) {
+  void _getEmailValidStatus(value) {
     bool retVal = false;
     final result = validateEmail(value);
     retVal = result == null ? true : false;
     isEmailValid = retVal;
   }
 
-  togglePasswordVisibility() {
+  _togglePasswordVisibility() {
     setState(() => isPasswordHidden = !isPasswordHidden);
   }
 
@@ -63,7 +63,7 @@ class _LoginLegalEaseState extends State<LoginLegalEase> {
     super.initState();
 
     _emailController.addListener(() {
-      getEmailValidStatus(_emailController.text);
+      _getEmailValidStatus(_emailController.text);
       emailText = _emailController.text;
       setState(() {});
     });
@@ -92,123 +92,122 @@ class _LoginLegalEaseState extends State<LoginLegalEase> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<ToastieAuthProvider, ToastieStateProvider>(
-      builder: (context, authProvider, stateProvider, child) => Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "LegalEase",
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge!
-                    .copyWith(fontSize: 40),
-              ),
-              Text(
-                "Enter your LegalEase account details below",
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              const SizedBox(height: 25),
-              Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Email",
-                      // textAlign: TextAlign.start,
-                      style: Theme.of(context).textTheme.bodyMedium,
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "LegalEase",
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge!
+                  .copyWith(fontSize: 40),
+            ),
+            Text(
+              "Enter your LegalEase account details below",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 25),
+            Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Email",
+                    // textAlign: TextAlign.start,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  TextFormField(
+                    controller: _emailController,
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelMedium!
+                        .copyWith(color: Colors.black),
+                    decoration: InputDecoration(
+                      // fillColor: Colors.transparent,
+                      suffixIcon: isEmailValid
+                          ? const Icon(Icons.check, color: Colors.green)
+                          : null,
                     ),
-                    TextFormField(
-                      controller: _emailController,
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelMedium!
-                          .copyWith(color: Colors.black),
-                      decoration: InputDecoration(
-                        // fillColor: Colors.transparent,
-                        suffixIcon: isEmailValid
-                            ? const Icon(Icons.check, color: Colors.green)
-                            : null,
+                    maxLines: 1,
+                    minLines: 1,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: validateEmail,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    "Password",
+                    // textAlign: TextAlign.start,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  TextFormField(
+                    controller: _pwdController,
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelMedium!
+                        .copyWith(color: Colors.black),
+                    decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          isPasswordHidden
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
+                        onPressed: _togglePasswordVisibility,
+                        color: Colors.black,
                       ),
-                      maxLines: 1,
-                      minLines: 1,
-                      keyboardType: TextInputType.emailAddress,
-                      validator: validateEmail,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
-                    const SizedBox(height: 15),
-                    Text(
-                      "Password",
-                      // textAlign: TextAlign.start,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    TextFormField(
-                      controller: _pwdController,
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelMedium!
-                          .copyWith(color: Colors.black),
-                      decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            isPasswordHidden
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: togglePasswordVisibility,
-                          color: Colors.black,
+                    obscureText: isPasswordHidden,
+                    obscuringCharacter: "●",
+                    maxLines: 1,
+                    minLines: 1,
+                  ),
+                  const SizedBox(height: 30),
+                  Align(
+                    alignment: Alignment.center,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      obscureText: isPasswordHidden,
-                      obscuringCharacter: "●",
-                      maxLines: 1,
-                      minLines: 1,
+                      child: const Text("Login"),
+                      onPressed: () {
+                        ToastiesAuthService.signInWithEmailAndPassword(
+                          _emailController.text,
+                          _pwdController.text,
+                        ).then(
+                          (userCred) {
+                            final authProvider = Provider.of<ToastieAuthProvider>(context, listen: false);
+                            authProvider.setUserInstance(userCred.user!);
+                            // SET STATE PROVIDER SETTINGS HERE (use async function)
+                            GoRouter.of(context).go("/home");
+                          },
+                        );
+                      },
                     ),
-                    const SizedBox(height: 30),
-                    Align(
-                      alignment: Alignment.center,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                            foregroundColor:
-                                Theme.of(context).colorScheme.onPrimary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          child: const Text("Login"),
-                          onPressed: () {
-                            ToastiesAuthService.signInWithEmailAndPassword(
-                              _emailController.text,
-                              _pwdController.text,
-                            ).then(
-                              (userCred) {
-                                authProvider.setUserInstance(userCred.user!);
-                                // SET STATE PROVIDER SETTINGS HERE (use async function)
-                                GoRouter.of(context).go("/home");
-                              },
-                            );
-                          }),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              user != null
-                  ? Text(
-                      "User ------- ${user!.uid}",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    )
-                  : Text(
-                      "User is currently signed out!",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-            ],
-          ),
+            ),
+            user != null
+                ? Text(
+                    "User ------- ${user!.uid}",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  )
+                : Text(
+                    "User is currently signed out!",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+          ],
         ),
       ),
     );
