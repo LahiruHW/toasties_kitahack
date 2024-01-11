@@ -23,6 +23,8 @@ class _ToastiesBottomNavBarState extends State<ToastiesBottomNavBar> {
   }
 
   void _onTapped(int index) {
+    if (selectedIndex == index) return;
+
     setState(() => selectedIndex = index);
 
     switch (index) {
