@@ -9,8 +9,6 @@ class ToastieAuthProvider extends ChangeNotifier {
   User? user;
   final authService = ToastiesAuthService();
 
-  // final WordGenerator wordGenerator = WordGenerator();
-
   ToastieAuthProvider() {
 
     authService.onAuthStateChanged.listen((User? newUser) {
@@ -77,10 +75,14 @@ class ToastieAuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> signOut() async {
+    await authService.signOut();
+    clearUserInstance();
+  }
+
 
   /// clear the user instance after sign out
-  Future<void> clearUserInstance() async {
-    await authService.signOut();
+  void clearUserInstance() async {
     user = null;
     debugPrint('------------------------------ AuthProvider user signed out & cleared');
     notifyListeners();
