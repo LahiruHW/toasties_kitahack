@@ -1,12 +1,8 @@
-import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:toasties_flutter/common/providers/auth_provider.dart';
-// import 'package:toasties_flutter/common/providers/state_provider.dart';
-import 'package:toasties_flutter/common/utility/toastie_auth.dart';
 
 /// Login page for LegalEase User Accounts, does not validate password for obvious reasons
 class LoginLegalEase extends StatefulWidget {
@@ -24,8 +20,6 @@ class _LoginLegalEaseState extends State<LoginLegalEase> {
   final TextEditingController _pwdController = TextEditingController();
 
   User? user;
-  ToastiesAuthService authService = ToastiesAuthService();
-  late final StreamSubscription<User?> authStateChangesMonitor;
 
   String emailText = "";
   String passwordText = "";
@@ -71,22 +65,12 @@ class _LoginLegalEaseState extends State<LoginLegalEase> {
     _pwdController.addListener(() {
       setState(() => passwordText = _pwdController.text);
     });
-
-    authStateChangesMonitor =
-        ToastiesAuthService.auth.authStateChanges().listen((User? user) {
-      if (user == null) {
-        print("User is currently signed out!");
-      } else {
-        setState(() => this.user = user);
-      }
-    });
   }
 
   @override
   void dispose() {
     _emailController.dispose();
     _pwdController.dispose();
-    authStateChangesMonitor.cancel();
     super.dispose();
   }
 
@@ -181,17 +165,16 @@ class _LoginLegalEaseState extends State<LoginLegalEase> {
                       ),
                       child: const Text("Login"),
                       onPressed: () {
-                        ToastiesAuthService.signInWithEmailAndPassword(
-                          _emailController.text,
-                          _pwdController.text,
-                        ).then(
-                          (userCred) {
-                            final authProvider = Provider.of<ToastieAuthProvider>(context, listen: false);
-                            authProvider.setUserInstance(userCred.user!);
-                            // SET STATE PROVIDER SETTINGS HERE (use async function)
-                            GoRouter.of(context).go("/home");
-                          },
-                        );
+                        final authProvider = Provider.of<ToastieAuthProvider>(
+                            context,
+                            listen: false);
+
+                        authProvider
+                            .signInWithEmailAndPassword(emailText, passwordText)
+                            .then(
+                              (value) => GoRouter.of(context).go("/home"),
+                            );
+
                       },
                     ),
                   ),

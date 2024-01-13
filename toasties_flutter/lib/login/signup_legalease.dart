@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -22,10 +19,6 @@ class _SignupLegalEaseState extends State<SignupLegalEase> {
   final TextEditingController _unameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _pwdController = TextEditingController();
-
-  User? user;
-  ToastiesAuthService authService = ToastiesAuthService();
-  late final StreamSubscription<User?> authStateChangesMonitor;
 
   String unameText = "";
   String emailText = "";
@@ -120,27 +113,19 @@ class _SignupLegalEaseState extends State<SignupLegalEase> {
       unameText = _unameController.text;
       setState(() {});
     });
-
-    authStateChangesMonitor =
-        ToastiesAuthService.auth.authStateChanges().listen((User? user) {
-      if (user == null) {
-        print("User is currently signed out!");
-      } else {
-        setState(() => this.user = user);
-      }
-    });
   }
 
   @override
   void dispose() {
     _emailController.dispose();
     _pwdController.dispose();
-    authStateChangesMonitor.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final authProvider =
+        Provider.of<ToastieAuthProvider>(context, listen: false);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -273,38 +258,21 @@ class _SignupLegalEaseState extends State<SignupLegalEase> {
                       ),
                       child: const Text("Sign Up"),
                       onPressed: () {
-                        final authProvider = Provider.of<ToastieAuthProvider>(
-                            context,
-                            listen: false);
-                        // create the account and update the user display name
-                        ToastiesAuthService.signUpWithLegalEaseAccount(
-                          emailText,
-                          passwordText,
-                          unameText,
-                        ).then(
-                          (userCred) {
-                            // after creating the account, sign the user in
-                            ToastiesAuthService.signInWithEmailAndPassword(
-                              emailText,
-                              passwordText,
-                            ).then(
-                              (userCred) {
-                                authProvider.setUserInstance(userCred.user!);
-                                // SET STATE PROVIDER SETTINGS HERE (use async function)
-                                GoRouter.of(context).go("/home");
-                              },
+                        authProvider
+                            .signUpWithLegalEaseAccount(
+                                emailText, passwordText, unameText)
+                            .then(
+                              (value) => GoRouter.of(context).go("/home"),
                             );
-                          },
-                        );
                       },
                     ),
                   ),
                 ],
               ),
             ),
-            user != null
+            authProvider.user != null
                 ? Text(
-                    "User ------- ${user!.uid}",
+                    "User ------- ${authProvider.user!.uid}",
                     style: Theme.of(context).textTheme.bodyMedium,
                   )
                 : Text(

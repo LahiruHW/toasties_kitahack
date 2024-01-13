@@ -2,55 +2,94 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:toasties_flutter/common/utility/toastie_auth.dart';
 
-// import 'package:cloud_firestore/cloud_firestore.dart';
-
-///////////// SIGN IN / LOG IN
-
-// 1. get the user credentials from the login/signup page
-
-// 2. retrieve the user data from the database, including settings, chat data, etc.
-
-// 3. update the state of the app using this data received
-
-///////////// SIGN OUT / LOG OUT
-
-// 1. sign out the user from firebase
-
+/// Provider for the current user instance
 class ToastieAuthProvider extends ChangeNotifier {
+  
+  String? userName;
   User? user;
+  final authService = ToastiesAuthService();
 
   // final WordGenerator wordGenerator = WordGenerator();
 
   ToastieAuthProvider() {
+
+    authService.onAuthStateChanged.listen((User? newUser) {
+      if (newUser == null) {
+        debugPrint('------------------------------ No user has currently logged in');
+        user = null;
+        notifyListeners();
+      } else {
+        setUserInstance(newUser);
+      }
+    });
+
+    authService.onUserChanged.listen((User? newUser) {
+      if (newUser == null) {
+        debugPrint('------------------------------ AuthProvider user signed out');
+        user = null;
+        notifyListeners();
+      } else {
+        setUserInstance(newUser);
+      }
+    });
+
     debugPrint('------------------------------ AuthProvider initialized');
   }
 
-  /// set the user instance after login (and sign out previous user if any)
-  void setUserInstance(User newUser) async {
-
-    // if the current user is not null, sign out first
-    if (user != null) {
-      ToastiesAuthService.signOut().then((value) {
-        debugPrint(
-            '------------------------------ AuthProvider user was forcibly signed out');
-      });
-    }
-
-    user = newUser;
-    debugPrint('------------------------------ AuthProvider user changed');
-
-    // if the user display name is null, set it to a default random name
-    if (user!.displayName == null) {
-      final randomName = ToastiesAuthService.getRandomName();
-      user!.updateDisplayName(randomName).then(
-            (value) => user!.reload().then(
-              (value) {
-                debugPrint(
-                    '------------ user.displayName updated to ${user!.displayName}');
-                notifyListeners();
-              },
-            ),
-          );
+  /// calls the sign in with email and password method from the auth service
+  Future<void> signInWithEmailAndPassword(String email, String password) async {
+    try {
+      UserCredential userCredential = await authService.signInWithEmailAndPassword(email, password);
+      setUserInstance(userCredential.user!);
+      debugPrint('------------------------------ AuthProvider LegalEase Account user logged in');
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e);
     }
   }
+
+  /// calls the sign in with google method from the auth service
+  Future<void> signInWithGoogle() async {
+    try {
+      UserCredential userCredential = await authService.signInWithGoogle();
+      setUserInstance(userCredential.user!);
+      debugPrint('------------------------------ AuthProvider Google Account user logged in');
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  /// calls the sign up with email and password method from the auth service
+  /// and then sets the user instance, effectively logging the user in
+  Future<void> signUpWithLegalEaseAccount(String email, String password, String? userName) async {
+    try {
+      UserCredential userCredential = await authService.signUpWithLegalEaseAccount(email, password, userName);
+      setUserInstance(userCredential.user!);
+      debugPrint('------------------------------ AuthProvider new LegalEase Account user signed up & logged in');
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  /// set all the user instance data after login or signup
+  void setUserInstance(User user) async {
+    user = user;
+    debugPrint('------------------------------ AuthProvider user set');
+    notifyListeners();
+  }
+
+
+  /// clear the user instance after sign out
+  Future<void> clearUserInstance() async {
+    await authService.signOut();
+    user = null;
+    debugPrint('------------------------------ AuthProvider user signed out & cleared');
+    notifyListeners();
+  }
+
+  /// refresh the state of the user
+  Future<void> refreshUser() async {
+    await user!.reload();
+    notifyListeners();
+  }
+
 }

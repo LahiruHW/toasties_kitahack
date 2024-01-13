@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 
-import 'dart:async';
+// import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -14,6 +14,7 @@ import 'package:toasties_flutter/common/widgets/colour_switch_toggle.dart';
 import 'package:toasties_flutter/common/widgets/google_action_button.dart';
 import 'package:toasties_flutter/common/widgets/legalease_action_button.dart';
 
+/// Provides options to either signup/login with a Google or LegalEase User Account
 class LoginTypeSelectPage extends StatefulWidget {
   const LoginTypeSelectPage({
     super.key,
@@ -26,24 +27,14 @@ class LoginTypeSelectPage extends StatefulWidget {
 class _LoginTypeSelectPageState extends State<LoginTypeSelectPage> {
   User? user;
   ToastiesAuthService authService = ToastiesAuthService();
-  late final StreamSubscription<User?> authStateChangesMonitor;
 
   @override
   void initState() {
     super.initState();
-    authStateChangesMonitor =
-        ToastiesAuthService.auth.authStateChanges().listen((User? user) {
-      if (user == null) {
-        print("User is currently signed out!");
-      } else {
-        setState(() => this.user = user);
-      }
-    });
   }
 
   @override
   void dispose() {
-    authStateChangesMonitor.cancel();
     super.dispose();
   }
 
@@ -67,13 +58,9 @@ class _LoginTypeSelectPageState extends State<LoginTypeSelectPage> {
                 onPressed: () {
                   final authProvider =
                       Provider.of<ToastieAuthProvider>(context, listen: false);
-                  ToastiesAuthService.signInWithGoogle().then(
-                    (userCred) {
-                      authProvider.setUserInstance(userCred.user!);
-                      // SET STATE PROVIDER SETTINGS HERE (use async function)
-                      GoRouter.of(context).go("/home");
-                    },
-                  );
+                  authProvider.signInWithGoogle().then(
+                        (value) => GoRouter.of(context).go("/home"),
+                      );
                 }, // update the user state
                 title: "Login with Google",
                 titleColor: Theme.of(context)

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:toasties_flutter/common/utility/toastie_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:toasties_flutter/common/providers/auth_provider.dart';
+import 'package:toasties_flutter/common/utility/toasties_firestore_services.dart';
 
 class ToastiesSideNavMenu extends StatelessWidget {
   const ToastiesSideNavMenu({
@@ -9,6 +11,7 @@ class ToastiesSideNavMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<ToastieAuthProvider>(context);
     return NavigationDrawer(
       children: [
         Container(
@@ -30,7 +33,7 @@ class ToastiesSideNavMenu extends StatelessWidget {
         ),
         ListTile(
           leading: const Icon(Icons.notifications_none_outlined),
-          
+
           title: const Text('Notifications'),
           titleTextStyle: Theme.of(context).textTheme.headlineSmall,
           onTap: () {},
@@ -51,15 +54,44 @@ class ToastiesSideNavMenu extends StatelessWidget {
           onTap: () => GoRouter.of(context).push('/settings'),
         ),
         ListTile(
-          leading: const Icon(Icons.logout, color: Colors.red,),
+          leading: const Icon(
+            Icons.logout,
+            color: Colors.red,
+          ),
           title: const Text('Log Out'),
           titleTextStyle: Theme.of(context).textTheme.headlineSmall!.copyWith(
                 color: Theme.of(context).colorScheme.error,
               ),
           onTap: () {
-            ToastiesAuthService.signOut().then(
-              (value) => GoRouter.of(context).go('/login-base'),
-            );
+            authProvider.signOut().then(
+                  (value) => GoRouter.of(context).go('/login-base'),
+                );
+          },
+        ),
+        
+        ListTile(
+          leading: const Icon(
+            Icons.delete,
+            color: Colors.red,
+          ),
+          title: const Text('Nuke All Firebase Collections & exit'),
+          titleTextStyle: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                color: Theme.of(context).colorScheme.error,
+              ),
+          onTap: () {},
+        ),
+
+        ListTile(
+          leading: const Icon(
+            Icons.connect_without_contact,
+            color: Colors.red,
+          ),
+          title: const Text('Spoof Firebase Data'),
+          titleTextStyle: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                color: Theme.of(context).colorScheme.error,
+              ),
+          onTap: () {
+            ToastiesFirestoreServices.spoofData(authProvider.user!.uid);
           },
         ),
       ],
