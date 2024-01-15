@@ -2,8 +2,7 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:word_generator/word_generator.dart";
 
-// TODO:_ FIX THIS CLASS TO BOT BE STATIC, AND TO USE PROVIDERS INSTEAD, REFER TO https://stackoverflow.com/questions/64520543/struggling-with-authstatechanges-in-flutter
-
+/// Handles all the authentication related methods and services from the firebase_auth package
 class ToastiesAuthService {
 
   // instance of the firebase auth service
@@ -14,6 +13,9 @@ class ToastiesAuthService {
 
   /// observes the user changes in the firebase auth service
   Stream<User?> get onUserChanged => _auth.userChanges();
+
+  /// get the current user instance
+  User? get currentUser => _auth.currentUser;
 
   /// returns the userID of the current user instance
   Future<String> getCurrentUID() async {

@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -18,8 +18,6 @@ class _LoginLegalEaseState extends State<LoginLegalEase> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _pwdController = TextEditingController();
-
-  User? user;
 
   String emailText = "";
   String passwordText = "";
@@ -76,6 +74,7 @@ class _LoginLegalEaseState extends State<LoginLegalEase> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<ToastieAuthProvider>(context);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -164,12 +163,12 @@ class _LoginLegalEaseState extends State<LoginLegalEase> {
                         ),
                       ),
                       child: const Text("Login"),
-                      onPressed: () {
+                      onPressed: () async {
                         final authProvider = Provider.of<ToastieAuthProvider>(
                             context,
                             listen: false);
 
-                        authProvider
+                        await authProvider
                             .signInWithEmailAndPassword(emailText, passwordText)
                             .then(
                               (value) => GoRouter.of(context).go("/home"),
@@ -181,9 +180,9 @@ class _LoginLegalEaseState extends State<LoginLegalEase> {
                 ],
               ),
             ),
-            user != null
+            authProvider.user != null
                 ? Text(
-                    "User ------- ${user!.uid}",
+                    "User ------- ${authProvider.user!.uid}",
                     style: Theme.of(context).textTheme.bodyMedium,
                   )
                 : Text(
