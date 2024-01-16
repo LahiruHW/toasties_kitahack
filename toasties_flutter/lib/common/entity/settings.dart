@@ -2,13 +2,13 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Settings {
+class UserSettings {
   late bool isDarkMode;
   late Timestamp? lastUpdated;
   late String? lastUpdatedString;
 
-  Settings({
-    this.isDarkMode = true,
+  UserSettings({
+    this.isDarkMode = false,
     this.lastUpdated,
     this.lastUpdatedString,
   });
@@ -28,25 +28,22 @@ class Settings {
   }
 
   /// DON'T USE THIS YET - Lahiru
-  factory Settings.fromJson(Map<String, dynamic> json) {
-    return Settings(
+  factory UserSettings.fromJson(Map<String, dynamic> json) {
+    return UserSettings(
       isDarkMode: json['isDarkMode'],
       lastUpdated: json['lastUpdated'],
       lastUpdatedString: json['lastUpdatedString'],
     );
   }
 
-  /// DON'T USE THIS YET - Lahiru
   Map<String, dynamic> toJson() => {
         'isDarkMode': isDarkMode,
-        'lastUpdated': lastUpdated,
-        'lastUpdatedString': lastUpdatedString,
+        'lastUpdated': lastUpdated ?? Timestamp.now(),
       };
 
   @override
   String toString() {
-    // TODO: implement toString
-    return 'Settings: isDarkMode: $isDarkMode, lastUpdated: $lastUpdated, lastUpdatedString: $lastUpdatedString';
+    return 'Settings: {isDarkMode: $isDarkMode, lastUpdated: $lastUpdated, lastUpdatedString: $lastUpdatedString}';
   }
 
 }
