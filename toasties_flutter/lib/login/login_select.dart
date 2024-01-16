@@ -41,6 +41,7 @@ class _LoginTypeSelectPageState extends State<LoginTypeSelectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Center(
         child: SizedBox(
           height: 300,

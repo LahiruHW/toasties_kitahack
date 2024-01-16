@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toasties_flutter/common/widgets/animating_gradient_backdrop.dart';
 
 class BaseEntrace extends StatefulWidget {
   const BaseEntrace({
@@ -21,7 +22,7 @@ class _BaseEntraceState extends State<BaseEntrace> {
         body: Stack(
           fit: StackFit.expand,
           children: [
-            // add animating gradient background here
+            const AnimGradientBackdrop(),
             widget.bodyWidget!,
           ],
         ),

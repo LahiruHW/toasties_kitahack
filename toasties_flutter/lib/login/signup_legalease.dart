@@ -127,6 +127,7 @@ class _SignupLegalEaseState extends State<SignupLegalEase> {
     final authProvider =
         Provider.of<ToastieAuthProvider>(context, listen: false);
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Column(

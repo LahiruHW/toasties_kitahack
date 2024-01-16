@@ -75,6 +75,7 @@ class _LoginLegalEaseState extends State<LoginLegalEase> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<ToastieAuthProvider>(context);
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Column(
