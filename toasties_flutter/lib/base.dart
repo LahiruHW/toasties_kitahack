@@ -38,6 +38,8 @@ class _BaseState extends State<Base> {
     return Consumer<ToastieStateProvider>(
       builder: (context2, provider, child) => Scaffold(
         key: globalKey,
+        drawerEnableOpenDragGesture: true,
+        drawerEdgeDragWidth: MediaQuery.of(context).size.width / 2,
         appBar: ToastiesAppBar(
           showBackButton: true,
           showTitle: true,
