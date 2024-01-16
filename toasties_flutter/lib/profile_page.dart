@@ -29,25 +29,31 @@ class ProfilePage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-
-                        CachedNetworkImage(
-                          imageUrl: provider.user!.photoURL ?? "",
-                          width: 100,
-                          height: 100,
-                          alignment: Alignment.center,
-                          cacheKey: "profile-img-${provider.user!.uid}",
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => const Icon(
-                            Icons.account_box_rounded,
-                            size: 100,
-                          ),
-                          errorWidget: (context, url, error) => const Icon(
-                            Icons.account_box_rounded,
-                            size: 100,
-                          ),
-                          errorListener: (errorObj) => throw Exception(errorObj),
-                          useOldImageOnUrlChange: true,
-                        ),
+                        provider.user!.photoURL != null
+                            ? CachedNetworkImage(
+                                imageUrl: provider.user!.photoURL ?? "",
+                                width: 100,
+                                height: 100,
+                                alignment: Alignment.center,
+                                cacheKey: "profile-img-${provider.user!.uid}",
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => const Icon(
+                                  Icons.account_box_rounded,
+                                  size: 100,
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(
+                                  Icons.account_box_rounded,
+                                  size: 100,
+                                ),
+                                errorListener: (errorObj) =>
+                                    throw Exception(errorObj),
+                                useOldImageOnUrlChange: true,
+                              )
+                            : const Icon(
+                                Icons.account_box_rounded,
+                                size: 100,
+                              ),
                         Expanded(
                           child: Center(
                             child: Column(
