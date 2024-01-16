@@ -3,11 +3,11 @@ import 'package:toasties_flutter/common/entity/index.dart';
 
 class UserLocalProfile{
   late String? userName;
-  late UserSettings? settings;
+  UserSettings settings;
 
   UserLocalProfile({
     this.userName = "",
-    this.settings,
+    required this.settings,
   });
 
   factory UserLocalProfile.fromJson(Map<String, dynamic> json) {
@@ -19,7 +19,7 @@ class UserLocalProfile{
 
   Map<String, dynamic> toJson() => {
         'userName': userName,
-        'settings': settings?.toJson(),
+        'settings': settings.toJson()
       };
 
   @override
