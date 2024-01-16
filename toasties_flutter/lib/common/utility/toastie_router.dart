@@ -102,7 +102,7 @@ class ToastieRouter {
             name: "profile",
             path: '/profile',
             pageBuilder: (context, state) =>
-                const MaterialPage(child: ProfilePage(), maintainState: true),
+                const MaterialPage(child: ProfilePage()),
           ),
         ],
         builder: (context, state, child) => Base(bodyWidget: child),

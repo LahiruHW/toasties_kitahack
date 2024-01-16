@@ -51,13 +51,14 @@ class ToastiesSideNavMenu extends StatelessWidget {
           //   onTap: () {},
           //   // onTap: () => GoRouter.of(context).push('/profile'),
           // ),
-          // ListTile(
-          //   leading: const Icon(Icons.settings_outlined),
-          //   title: const Text('Settings'),
-          //   titleTextStyle: Theme.of(context).textTheme.headlineSmall,
-          //   // onTap: () {},
-          //   onTap: () => GoRouter.of(context).push('/settings'),
-          // ),
+
+          ListTile(
+            leading: const Icon(Icons.settings_outlined),
+            title: const Text('Settings'),
+            titleTextStyle: Theme.of(context).textTheme.headlineSmall,
+            // onTap: () {},
+            onTap: () => GoRouter.of(context).push('/settings'),
+          ),
 
           ListTile(
             leading: const Icon(

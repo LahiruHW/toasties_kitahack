@@ -48,12 +48,14 @@ class LegalEaseApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ToastieStateProvider>(
+    // return Consumer<ToastieStateProvider>(
+    return Consumer<ToastieAuthProvider>(
       builder: (context, provider, child) => MaterialApp.router(
         routerConfig: ToastieRouter.router,
         title: 'LegalEase',
         themeMode:
-            provider.settings.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            // provider.settings.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            provider.userProfile.settings.isDarkMode ? ThemeMode.dark : ThemeMode.light,
         theme: ToastiesAppTheme.lightTheme,
         darkTheme: ToastiesAppTheme.darkTheme,
         themeAnimationDuration: const Duration(milliseconds: 500),

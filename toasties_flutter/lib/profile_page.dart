@@ -29,12 +29,13 @@ class ProfilePage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+
                         CachedNetworkImage(
                           imageUrl: provider.user!.photoURL ?? "",
                           width: 100,
                           height: 100,
                           alignment: Alignment.center,
-                          cacheKey: "profile-img",
+                          cacheKey: "profile-img-${provider.user!.uid}",
                           fit: BoxFit.cover,
                           placeholder: (context, url) => const Icon(
                             Icons.account_box_rounded,
@@ -44,8 +45,7 @@ class ProfilePage extends StatelessWidget {
                             Icons.account_box_rounded,
                             size: 100,
                           ),
-                          errorListener: (errorObj) => print(
-                              "======== Error loading profile image: $errorObj"),
+                          errorListener: (errorObj) => throw Exception(errorObj),
                           useOldImageOnUrlChange: true,
                         ),
                         Expanded(
@@ -55,7 +55,8 @@ class ProfilePage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${provider.user!.displayName}',
+                                  // '${provider.user!.displayName}',
+                                  '${provider.userProfile.userName}',
                                   textAlign: TextAlign.start,
                                   style: Theme.of(context)
                                       .textTheme
@@ -84,7 +85,14 @@ class ProfilePage extends StatelessWidget {
                     ),
                     const Divider(color: Colors.black, height: 1.0),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+
+                        print(provider.user);
+                        print(provider.userProfile);
+                        print(provider.currentChat);
+                        print(provider.savedChats);
+                      
+                      } ,
                       // make the text button expand to fill the entire width
                       style: TextButton.styleFrom(
                         minimumSize: const Size(double.infinity, 60),
