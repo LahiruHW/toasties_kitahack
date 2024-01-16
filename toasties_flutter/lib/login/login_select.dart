@@ -60,7 +60,10 @@ class _LoginTypeSelectPageState extends State<LoginTypeSelectPage> {
                       Provider.of<ToastieAuthProvider>(context, listen: false);
                   authProvider.signInWithGoogle().then(
                     (value) {
-                      GoRouter.of(context).go("/home");
+                      Future.delayed(
+                        const Duration(milliseconds: 1500),
+                        () => GoRouter.of(context).go("/home"),
+                      );
                     },
                   );
                 }, // update the user state

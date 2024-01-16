@@ -27,43 +27,79 @@ class ToastiesFirestoreServices {
   // /////////////////////////////////////////////////////////////////////////////////////////////
 
   /// initialize user profile - username can be null for a firstime google login
-  static void setupUserProfile(String userID, String? userName) async {
+  static Future<Map<String, dynamic>> setupUserProfile(
+      String userID, String? userName) async {
     // only initialize the user profile if it doesn't exist - needed for google login
     final userProfile = await userProfileDocRef(userID).get();
+
+    Map<String, dynamic> returnMap = {
+      'userProfile': null,
+      'currentChat': null,
+      'savedChats': null,
+    };
+
     if (userProfile.exists) {
-      debugPrint("--------------- GOOGLE PROFILE ALREADY EXISTS IN FIREBASE");
-      // TODO:_UPDATE THE USER PROFILE DATA (i.e all the firebase data for the user)
+      debugPrint("--------------- PROFILE ALREADY EXISTS IN FIREBASE");
 
-
-      getUserProfileData(userID).then((value) {
-        debugPrint("--------------- GOOGLE PROFILE DATA: $value");
+      final userProfile =
+          await getUserProfileData(userID).then((userProfileData) {
+        final userProfile = UserLocalProfile.fromJson(userProfileData);
+        debugPrint("--------------- LOCAL PROFILE: $userProfile");
+        return userProfile;
       });
 
-      getCurrentChatData(userID).then((value) {
-        debugPrint("--------------- GOOGLE CURRENT CHAT DATA: $value");
+      final currentChat =
+          await getCurrentChatData(userID).then((currentChatData) {
+        final currentChat = Chat.fromJson(currentChatData);
+        debugPrint("--------------- CURRENT CHAT: $currentChat");
+        return currentChat;
       });
 
-      getAllSavedChatData(userID).then((value) {
-        debugPrint("--------------- GOOGLE SAVED CHAT DATA: $value");
+      final List<Chat> savedChats =
+          await getAllSavedChatData(userID).then((savedChatsData) {
+        if (savedChatsData.isEmpty) {
+          debugPrint("--------------- NO SAVED CHATS");
+          return [];
+        } else {
+          final savedChats =
+              savedChatsData.map((json) => Chat.fromJson(json)).toList();
+          debugPrint("--------------- SAVED CHATs: $savedChatsData");
+          return savedChats;
+        }
       });
 
+      returnMap['userProfile'] = userProfile;
+      returnMap['currentChat'] = currentChat;
+      returnMap['savedChats'] = savedChats;
 
-      return;
+      return returnMap;
     } else {
-      initializeNewUserProfile(userID, userName);
+      return initializeNewUserProfile(userID, userName);
     }
   }
 
-  static void initializeNewUserProfile(String userID, String? userName) async {
-    /// initialize a new user's profile data{
-
+  /// initialize a new user's profile data
+  static Future<Map<String, dynamic>> initializeNewUserProfile(
+      String userID, String? userName) async {
     final newSettings = UserSettings();
+    final userProfile = UserLocalProfile(
+      userName: userName,
+      settings: newSettings,
+    );
     final newChat = Chat();
+    final savedChats = [];
 
-    await userProfileDocRef(userID).set({
-      'userName': userName ?? "",
-      'settings': newSettings.toJson(),
-    });
+    Map<String, dynamic> returnMap = {
+      'userProfile': userProfile,
+      'currentChat': newChat,
+      'savedChats': savedChats,
+    };
+
+    // await userProfileDocRef(userID).set({
+    //   'userName': userName ?? "",
+    //   'settings': newSettings.toJson(),
+    // });
+    await userProfileDocRef(userID).set(userProfile.toJson());
 
     await chatsDocRef(userID).set({
       'currentChat': newChat.toJson(),
@@ -72,6 +108,8 @@ class ToastiesFirestoreServices {
     await savedChatCollection(userID).doc("default").set({
       'alert': "DO NOT READ THIS DOCUMENT",
     });
+
+    return returnMap;
   }
 
   /// get a Future of the user's cloud firestore profile data
@@ -88,28 +126,36 @@ class ToastiesFirestoreServices {
     });
   }
 
-  /// get a Future of the user's currentChat data
+  /// get a Future of the user's currentChat data from firestore
   static Future<Map<String, dynamic>> getCurrentChatData(String userID) {
-    return currentchatRef(userID).then((chatID) {
-      return chatsDocRef(userID)
-          .collection("savedChats")
-          .doc(chatID)
-          .get()
-          .then((docSnap) {
-        var data = docSnap.data() as Map<String, dynamic>;
-        if (docSnap.exists) {
-          return Future<Map<String, dynamic>>.value(data);
-        } else {
-          return Future<Map<String, dynamic>>.value({});
-        }
-      });
+    return chatsDocRef(userID).get().then((docSnap) {
+      var data = docSnap.data()?["currentChat"] as Map<String, dynamic>;
+      if (docSnap.exists) {
+        return Future<Map<String, dynamic>>.value(data);
+      } else {
+        return Future<Map<String, dynamic>>.value({});
+      }
     });
   }
 
-  // get a Future list of all the saved chats
-  static Future<List<Map<String, dynamic>>> getAllSavedChats(String userID) {
+  /// get a Future of the user's currentChat data from firestore
+  static Future<Chat> getCurrentChat(String userID) async {
+    final json = await getCurrentChatData(userID);
+    final currentChat = Chat.fromJson(json);
+    return currentChat;
+  }
+
+  /// get a Future list of all the saved chats from the user's firestore
+  static Future<List<Map<String, dynamic>>> getAllSavedChatData(String userID) {
     return savedChatCollection(userID).get().then((querySnap) {
-      var data = querySnap.docs.map((doc) => doc.data()).toList();
+      // var data = querySnap.docs.map((doc) => doc.data()).toList();
+      
+      // only get all the saved chats that are not the default one
+      var data = querySnap.docs
+          .where((doc) => doc.id != "default")
+          .map((doc) => doc.data())
+          .toList();
+
       if (querySnap.docs.isNotEmpty) {
         return Future<List<Map<String, dynamic>>>.value(data);
       } else {
@@ -118,8 +164,16 @@ class ToastiesFirestoreServices {
     });
   }
 
+  /// get a Future list of all the saved chats
+  static Future<List<Chat>> getAllSavedChats(String userID) async {
+    final jsonList = await getAllSavedChatData(userID);
+    final savedChats = jsonList.map((json) => Chat.fromJson(json)).toList();
+    return savedChats;
+  }
+
   /// get a Future of one specific savedChat, given the chatID
-  static Future<Map<String, dynamic>> getSavedChat(String userID, String chatID) {
+  static Future<Map<String, dynamic>> getSavedChat(
+      String userID, String chatID) {
     return savedChatCollection(userID).doc(chatID).get().then((docSnap) {
       var data = docSnap.data() as Map<String, dynamic>;
       if (docSnap.exists) {
@@ -130,18 +184,29 @@ class ToastiesFirestoreServices {
     });
   }
 
+  /// restore the current chat from the saved chat
+  static Future<void> restoreChat(String userID, String chatID) async {
+    // get the saved chat
+    final savedChat = await getSavedChat(userID, chatID);
+
+    // update the current chat
+    return chatsDocRef(userID).update({"currentChat": savedChat});
+  }
+
   ///////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
   /// update the user's profile data
-  static Future<void> updateUserProfileData(String userID, Map<String, dynamic> data) {
-    return userDocRef(userID).update(data);
+  static Future<void> updateUserProfileData(
+      String userID, Map<String, dynamic> data) {
+    return userProfileDocRef(userID).update(data);
   }
 
   /// update the user's currentChat data --> add a new message to the chat
-  static Future<void> sendCurrentChatMessage(String userID, Map<String, dynamic> data) {
+  static Future<void> sendCurrentChatMessage(
+      String userID, Map<String, dynamic> data) {
     // userId --> currentChat --> msgs --> add new message
     return chatsDocRef(userID).update({
       "currentChat": {
@@ -152,16 +217,78 @@ class ToastiesFirestoreServices {
 
   /// take the current chat and save it in a new document in the savedChats collection
   static Future<void> saveChat(String userID, Map<String, dynamic> data) async {
-
-    // create a new document 
-    final newDocRef = await savedChatCollection(userID).add(data);
-
-
-    // add the currentChat data to the new document
-    
-    // userId --> savedChats --> add new doc here
-  
+    data["timeSaved"] = Timestamp.now();
+    // ignore: unused_local_variable
+    final newDocRef = savedChatCollection(userID).add(data);
+    // DON'T UPDATE THE CURRENT CHAT unless the user restores another one
   }
 
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////
 
+  // /// clear alll docs in the "chat" collection
+  // static Future<void> nukeChatCollection() async {
+  //   final querySnap = await chatCollection.get();
+
+  //   for (var doc in querySnap.docs) {
+  //     (doc.id != "PLACEHOLDER") ? doc.reference.delete() : null;
+  //   }
+
+  //   // Future.delayed(const Duration(seconds: 3)).then((value) {
+  //   //   for (var doc in querySnap.docs) {
+  //   //     doc.reference.collection("savedChats").get().then(
+  //   //       (subQuerySnap) {
+  //   //         for (var doc in subQuerySnap.docs) {
+  //   //           doc.reference.delete();
+  //   //         }
+  //   //       },
+  //   //     );
+  //   //   }
+  //   // });
+
+  // }
+
+  // /// clear alll docs in the "user_profile" collection
+  // static Future<void> nukeUserProfileCollection() async {
+  //   final querySnap = await userCollection.get();
+  //   for (var doc in querySnap.docs) {
+  //     (doc.id != "PLACEHOLDER") ? doc.reference.delete() : null;
+  //   }
+  // }
+
+  // static Future<void> nukeAllCollections() async {
+  //   await nukeChatCollection();
+  //   await nukeUserProfileCollection();
+  // }
+
+  static spoofData(String userID) async {
+    /// initialize a new user's profile data{
+    final newChat = Chat(msgs: [
+      Message(
+          timeCreated: Timestamp.now(),
+          isMsgUser: true,
+          content: "Hello LAILA"),
+      Message(
+          timeCreated: Timestamp.now(),
+          isMsgUser: false,
+          content: "Hello USER"),
+      Message(
+          timeCreated: Timestamp.now(),
+          isMsgUser: false,
+          content:
+              "My name is LAILA (lˈe͡ɪlə), your legal assistant👋. Happy to be in your service! Let me know what I can do for you. To communicate with me, you can type ⌨️, take a photo 📸, or just talk with me 🎙️."),
+      Message(
+          timeCreated: Timestamp.now(),
+          isMsgUser: true,
+          content: "How are you?"),
+      Message(
+          timeCreated: Timestamp.now(), isMsgUser: false, content: "I'm fine!"),
+    ]);
+
+    await chatsDocRef(userID).update({
+      'currentChat': newChat.toJson(),
+    });
+  }
 }

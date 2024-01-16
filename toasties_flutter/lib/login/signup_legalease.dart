@@ -258,8 +258,7 @@ class _SignupLegalEaseState extends State<SignupLegalEase> {
                       ),
                       child: const Text("Sign Up"),
                       onPressed: () {
-                        authProvider
-                            .signUpWithLegalEaseAccount(
+                        authProvider.signUpWithLegalEaseAccount(
                                 emailText, passwordText, unameText)
                             .then(
                               (value) => GoRouter.of(context).go("/home"),

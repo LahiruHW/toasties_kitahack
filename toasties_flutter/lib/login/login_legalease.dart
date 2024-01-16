@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -171,9 +170,13 @@ class _LoginLegalEaseState extends State<LoginLegalEase> {
                         await authProvider
                             .signInWithEmailAndPassword(emailText, passwordText)
                             .then(
-                              (value) => GoRouter.of(context).go("/home"),
+                          (value) {
+                            Future.delayed(
+                              const Duration(milliseconds: 1500),
+                              () => GoRouter.of(context).go("/home"),
                             );
-
+                          },
+                        );
                       },
                     ),
                   ),
