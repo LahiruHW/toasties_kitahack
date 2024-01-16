@@ -22,7 +22,7 @@ class LegalEaseActionButton extends StatelessWidget {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         padding: const EdgeInsets.symmetric(
-          horizontal: 20,
+          horizontal: 10,
           vertical: 5,
         ),
         shape: RoundedRectangleBorder(
