@@ -10,21 +10,22 @@ import 'package:toasties_flutter/home_page.dart';
 import 'package:toasties_flutter/chat_page.dart';
 import 'package:toasties_flutter/saved_page.dart';
 import 'package:toasties_flutter/profile_page.dart';
+import 'package:toasties_flutter/testpages.dart';
 import 'package:toasties_flutter/common/settings_page.dart';
 
+
 class ToastieRouter {
+
+  static final _rootNavKey = GlobalKey<NavigatorState>();
+  static final _homeNavKey = GlobalKey<NavigatorState>();
+  static final _chatNavKey = GlobalKey<NavigatorState>();
+  static final _savedNavKey = GlobalKey<NavigatorState>();
+  static final _profileNavKey = GlobalKey<NavigatorState>();
+
   static final GoRouter router = GoRouter(
+    navigatorKey: _rootNavKey,
     initialLocation: '/login-base',
     routes: <RouteBase>[
-      // GoRoute(
-      //   path: '/',
-      //   pageBuilder: (context, state) => const MaterialPage(
-      //     child: Base(
-      //       bodyWidget: HomePage(),
-      //     ),
-      //   ),
-      // ),
-
       // ShellRoute for the app BEFORE user login (i.e. during login/signup)
       ShellRoute(
         routes: [
@@ -77,36 +78,133 @@ class ToastieRouter {
         builder: (context, state, child) => BaseEntrace(bodyWidget: child),
       ),
 
+
+
+
+
+
+
+
+
+
+      // // ShellRoute for the app AFTER the user has logged in
+      // ShellRoute(
+
+      //   routes: [
+      //     GoRoute(
+      //       name: 'home',
+      //       path: '/home',
+      //       pageBuilder: (context, state) =>
+      //           const MaterialPage(child: HomePage()),
+      //     ),
+      //     GoRoute(
+      //       name: "chat",
+      //       path: '/chat',
+      //       pageBuilder: (context, state) =>
+      //           const MaterialPage(child: ChatPage(), maintainState: true),
+      //     ),
+      //     GoRoute(
+      //       name: "saved",
+      //       path: '/saved',
+      //       pageBuilder: (context, state) => MaterialPage(child: SavedPage()),
+      //     ),
+      //     GoRoute(
+      //       name: "profile",
+      //       path: '/profile',
+      //       pageBuilder: (context, state) => MaterialPage(child: ProfilePage()),
+      //     ),
+      //   ],
+      //   builder: (context, state, child) => Base(bodyWidget: child),
+      // ),
+
+
+
+
+
+
+
+
+
       // ShellRoute for the app AFTER the user has logged in
-      ShellRoute(
-        routes: [
-          GoRoute(
-            name: 'home',
-            path: '/home',
-            pageBuilder: (context, state) =>
-                const MaterialPage(child: HomePage(), maintainState: true),
-          ),
-          GoRoute(
-            name: "chat",
-            path: '/chat',
-            pageBuilder: (context, state) =>
-                const MaterialPage(child: ChatPage(), maintainState: true),
-          ),
-          GoRoute(
-            name: "saved",
-            path: '/saved',
-            pageBuilder: (context, state) =>
-                const MaterialPage(child: SavedPage(), maintainState: true),
-          ),
-          GoRoute(
-            name: "profile",
-            path: '/profile',
-            pageBuilder: (context, state) =>
-                const MaterialPage(child: ProfilePage()),
-          ),
-        ],
+      StatefulShellRoute.indexedStack(
         builder: (context, state, child) => Base(bodyWidget: child),
+        branches: [
+
+
+          // StatefulShellBranch for the HOME tab ----------------------------------------------
+          StatefulShellBranch(
+            navigatorKey: _homeNavKey,
+            routes: [
+              GoRoute(
+                name: 'home',
+                path: '/home',
+                pageBuilder: (context, state) =>
+                    const MaterialPage(child: HomePage()),
+                routes: const [],
+              ),
+            ],
+          ),
+
+
+          // StatefulShellBranch for the CHAT tab ----------------------------------------------
+          StatefulShellBranch(
+            navigatorKey: _chatNavKey,
+            routes: [
+              GoRoute(
+                name: "chat",
+                path: '/chat',
+                pageBuilder: (context, state) =>
+                    const MaterialPage(child: ChatPage(), maintainState: true),
+                routes: const [],
+              ),              
+            ],
+          ),
+          
+          
+          // StatefulShellBranch for the SAVED tab ---------------------------------------------
+          StatefulShellBranch(
+            navigatorKey: _savedNavKey,
+            routes: [
+              GoRoute(
+                name: "saved",
+                path: '/saved',
+                pageBuilder: (context, state) => MaterialPage(child: SavedPage()),
+                routes: const [],
+              ),              
+            ],
+          ),
+          
+
+          // StatefulShellBranch for the PROFILE tab -------------------------------------------
+          StatefulShellBranch(
+            navigatorKey: _profileNavKey,
+            routes: [
+              GoRoute(
+                name: "profile",
+                path: '/profile',
+                pageBuilder: (context, state) => MaterialPage(child: ProfilePage(),),
+                routes:  [
+                  GoRoute(
+                    parentNavigatorKey: _profileNavKey,
+                    path: 'test1',
+                    builder: (context, state) => const TestPage1(),
+                  ),
+                ],
+              ),              
+            ],
+          ),
+        
+        
+        ],
       ),
+
+
+
+
+
+
+
+
       GoRoute(
         name: "settings",
         path: '/settings',

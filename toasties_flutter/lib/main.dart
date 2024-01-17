@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
+import 'package:toasties_flutter/LAILA/engine.dart';
 import 'package:toasties_flutter/common/providers/index.dart';
 import 'package:toasties_flutter/common/utility/toastie_router.dart';
 import 'package:toasties_flutter/firebase_options.dart';
@@ -11,21 +12,37 @@ Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  LAILA.init();
 
   // this is the root of the app:
   //  - MultiProvider allows for multiple providers to be used
   //  - ChangeNotifierProvider provides the state of the app
   final appRuntime = MultiProvider(
     providers: [
+      
       ChangeNotifierProvider(
         create: (context) => ToastieAuthProvider(),
       ),
+
       ChangeNotifierProvider(
         create: (context) => ToastieStateProvider(),
       ),
-      ChangeNotifierProvider(
-        create: (context) => ToastiesChatProvider(),
-      ),
+
+      // ChangeNotifierProvider(
+      //   create: (context) => ToastiesChatProvider(),
+      // ),
+
+      ChangeNotifierProxyProvider<ToastieAuthProvider, ToastiesChatProvider>(
+        create: (BuildContext context) {
+          return ToastiesChatProvider(userID: "");
+        },
+        update: (context, authProvider, ToastiesChatProvider? previous) {
+          previous!.userID = authProvider.user!.uid;
+          return ToastiesChatProvider(userID: authProvider.user!.uid);
+        },
+        lazy: true,
+      )
+
     ],
     child: const LegalEaseApp(),
   );

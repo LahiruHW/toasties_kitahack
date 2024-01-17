@@ -5,13 +5,11 @@ import 'package:toasties_flutter/common/entity/settings.dart';
 // contains the state of the app
 class ToastieStateProvider extends ChangeNotifier {
 
-  late Settings settings;
+  late UserSettings settings;
 
   ToastieStateProvider(){
     // initialize the state of the app
-    settings = Settings(
-      isDarkMode: false,
-    );
+    settings = UserSettings();
     debugPrint('------------------------------ ToastieStateProvider initialized');
   }
 

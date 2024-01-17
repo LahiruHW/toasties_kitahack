@@ -75,7 +75,10 @@ class ToastiesSideNavMenu extends StatelessWidget {
                 () => GoRouter.of(context).go('/login-base'),
               ).then(
                 (value) {
-                  authProvider.signOut();
+                  Future.delayed(
+                    const Duration(milliseconds: 2500),
+                    () => authProvider.signOut(),
+                  );
                   // stateProvider.clearUserProfileInstance();  <------ this should go here
                 },
               );

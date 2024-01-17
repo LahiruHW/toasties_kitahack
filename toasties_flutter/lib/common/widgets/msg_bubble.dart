@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
+// import 'package:flutter_gemini/flutter_gemini.dart';
 // import 'package:toasties_flutter/common/entity/message.dart';
 
 class ToastieChatBubble extends StatelessWidget {
@@ -62,6 +63,14 @@ class ToastieChatBubble extends StatelessWidget {
     if (child is Text) {
       return child;
     }
+
+    // if (child is Image) {
+    //   return child;
+    // }
+
+    // if (child is GeminiResponseTypeView) {
+    //   return child;
+    // }
 
     return const Text("❌❌ CHILD WIDGET ERROR ❌❌");
   }

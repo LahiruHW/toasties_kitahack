@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:toasties_flutter/common/providers/state_provider.dart';
 import 'package:toasties_flutter/common/widgets/bottom_nav_bar.dart';
@@ -10,7 +11,7 @@ import 'package:toasties_flutter/common/widgets/toasties_appbar.dart';
 class Base extends StatefulWidget {
   const Base({super.key, required this.bodyWidget});
 
-  final Widget bodyWidget;
+  final StatefulNavigationShell bodyWidget;
 
   @override
   State<Base> createState() => _BaseState();
@@ -59,7 +60,9 @@ class _BaseState extends State<Base> {
 
         endDrawer: const ToastiesSideNavMenu(),
 
-        bottomNavigationBar: const ToastiesBottomNavBar(),
+        // bottomNavigationBar: const ToastiesBottomNavBar(),
+        bottomNavigationBar: const ToastiesBottomNavBar(
+        ),
 
         // floatingActionButton: FloatingActionButton(
         //   child: provider.settings.isDarkMode ? const Icon(Icons.dark_mode) : const Icon(Icons.light_mode),

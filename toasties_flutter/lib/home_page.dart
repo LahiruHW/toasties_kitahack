@@ -10,9 +10,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  
+  final GlobalKey<NavigatorState> _homeNavKey = GlobalKey<NavigatorState>();
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _homeNavKey,
       body: Center(
         child: Text(
           'Home Page',
