@@ -102,12 +102,9 @@ class ProfilePage extends StatelessWidget {
                           // print(provider.currentChat);
                           // print(provider.savedChats);
 
-                          
-
-                          GoRouter.of(context).push("/profile/test1", extra: {
-                            'bottomNavbarIndex': 3,
-                          });
-
+                          // get the current path from the router
+                          final currentPath = GoRouter.of(context).routeInformationProvider.value.uri;
+                          GoRouter.of(context).push("$currentPath/test1");
 
                         },
                         // make the text button expand to fill the entire width

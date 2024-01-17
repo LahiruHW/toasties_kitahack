@@ -4,7 +4,7 @@ import 'package:toasties_flutter/common/entity/chat.dart';
 
 class ToastiesChatProvider extends ChangeNotifier {
 
-  String userID;
+  // String userID;
 
   Chat? chat;
 
@@ -15,13 +15,14 @@ class ToastiesChatProvider extends ChangeNotifier {
 
   // list of saved laws
 
-  ToastiesChatProvider({required this.userID}) {
-    
+  // ToastiesChatProvider({required this.userID}) {
+  //   // getCurrentChatInstance(userID);
+  //   debugPrint('------------------------------ ChatProvider initialized');
+  // }
+
+  ToastiesChatProvider() {
     // getCurrentChatInstance(userID);
     debugPrint('------------------------------ ChatProvider initialized');
-
-    
-
   }
 
 

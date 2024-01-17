@@ -61,7 +61,9 @@ class _BaseState extends State<Base> {
         endDrawer: const ToastiesSideNavMenu(),
 
         // bottomNavigationBar: const ToastiesBottomNavBar(),
-        bottomNavigationBar: const ToastiesBottomNavBar(
+        bottomNavigationBar: ToastiesBottomNavBar(
+          navShell: widget.bodyWidget,
+          index: widget.bodyWidget.currentIndex,
         ),
 
         // floatingActionButton: FloatingActionButton(
