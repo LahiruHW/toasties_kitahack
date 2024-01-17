@@ -49,6 +49,7 @@ dependencies:
   cloud_firestore: ^4.14.0
   flutter_chat_bubble: ^2.0.2
   cached_network_image: ^3.3.1
+  flutter_gemini: ^2.0.1
   animate_gradient: ^0.0.2+1
 
 dev_dependencies:
