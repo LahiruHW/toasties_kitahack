@@ -4,6 +4,8 @@
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:toasties_flutter/common/constants/env4toasties.dart';
 
+/// LAILA is the AI that powers the chatbot.
+/// This engine code is based on the Gemini API, and connects the user's firebase data to the flutter_
 class LAILA {
 
   LAILA._();

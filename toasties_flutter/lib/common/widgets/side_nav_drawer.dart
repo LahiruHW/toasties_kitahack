@@ -76,7 +76,7 @@ class ToastiesSideNavMenu extends StatelessWidget {
               ).then(
                 (value) {
                   Future.delayed(
-                    const Duration(milliseconds: 2500),
+                    const Duration(milliseconds: 3500),
                     () => authProvider.signOut(),
                   );
                   // stateProvider.clearUserProfileInstance();  <------ this should go here
@@ -94,6 +94,7 @@ class ToastiesSideNavMenu extends StatelessWidget {
             titleTextStyle: Theme.of(context).textTheme.headlineSmall!.copyWith(
                   color: Theme.of(context).colorScheme.error,
                 ),
+            enabled: false,
             onTap: () {},
           ),
 
@@ -106,6 +107,7 @@ class ToastiesSideNavMenu extends StatelessWidget {
             titleTextStyle: Theme.of(context).textTheme.headlineSmall!.copyWith(
                   color: Theme.of(context).colorScheme.error,
                 ),
+            enabled: false,
             onTap: () {
               print("${authProvider.user!.uid}");
 

@@ -12,6 +12,7 @@ migrate_working_dir/
 .env
 env4toasties.g.dart
 setup_gemini.sh
+TRASH.txt
 
 # IntelliJ related
 *.iml

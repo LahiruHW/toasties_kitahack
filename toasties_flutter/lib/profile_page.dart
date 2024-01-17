@@ -104,7 +104,7 @@ class ProfilePage extends StatelessWidget {
 
                           // get the current path from the router
                           final currentPath = GoRouter.of(context).routeInformationProvider.value.uri;
-                          GoRouter.of(context).push("$currentPath/test1");
+                          GoRouter.of(context).push("$currentPath/test2");
 
                         },
                         // make the text button expand to fill the entire width

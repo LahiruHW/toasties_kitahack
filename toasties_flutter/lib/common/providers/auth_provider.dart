@@ -73,6 +73,14 @@ class ToastieAuthProvider extends ChangeNotifier {
     );
   }
 
+
+  void addToCurrentChat(Message msg){
+    currentChat!.addMessage(msg);
+    notifyListeners();
+  }
+
+
+
   /// set all the user instance data after login or signup
   void setUserInstance(User user) async {
     this.user = user;
