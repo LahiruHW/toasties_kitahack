@@ -15,10 +15,12 @@ class ToastieChatBubble extends StatelessWidget {
   final Widget child;
   // final Message message;
 
+  final _bubbleVerticalGap = 6.0;
+
   @override
   Widget build(BuildContext context) {
     return isMsgUser
-    // return message.isMsgUser
+        // return message.isMsgUser
         ? _buildUserChatBubble(context)
         : _buildAIChatBubble(context);
   }
@@ -27,11 +29,11 @@ class ToastieChatBubble extends StatelessWidget {
     return ChatBubble(
       clipper: ChatBubbleClipper5(type: BubbleType.receiverBubble),
       alignment: Alignment.centerLeft,
-      margin: const EdgeInsets.only(
+      margin: EdgeInsets.only(
         left: 10,
         right: 80,
-        top: 10,
-        bottom: 10,
+        top: _bubbleVerticalGap,
+        bottom: _bubbleVerticalGap,
       ),
       padding: const EdgeInsets.all(15),
       elevation: 4,
@@ -47,14 +49,14 @@ class ToastieChatBubble extends StatelessWidget {
     return ChatBubble(
         clipper: ChatBubbleClipper5(type: BubbleType.sendBubble),
         alignment: Alignment.centerRight,
-        margin: const EdgeInsets.only(
+        margin: EdgeInsets.only(
           left: 80,
           right: 10,
-          top: 10,
-          bottom: 10,
+          top: _bubbleVerticalGap,
+          bottom: _bubbleVerticalGap,
         ),
         padding: const EdgeInsets.all(15),
-        backGroundColor: Colors.white,
+        backGroundColor: Theme.of(context).colorScheme.onPrimary,
         elevation: 0,
         child: _buildChild(context));
   }
@@ -76,8 +78,3 @@ class ToastieChatBubble extends StatelessWidget {
   }
 }
 
-
-extension Text2 on Text{
-  // create a getter for the text color
-  Color get textColor => style?.color ?? Colors.black;
-}
