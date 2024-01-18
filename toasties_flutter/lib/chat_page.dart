@@ -53,13 +53,6 @@ class _ChatPageState extends State<ChatPage> {
                     },
                   ),
 
-                  // ListView(
-                  //   children:
-
-                  //   // authProvider.chat.msgs!.map((msg) => msg.toChatBubble(style: Theme.of(context).textTheme.labelSmall)).toList()
-                  //   authProvider.currentChat!.msgs!.map((msg) => msg.toChatBubble(style: Theme.of(context).textTheme.labelSmall)).toList()
-
-                  // ),
                 ),
                 ChatInputGroup(
                   textController: _textController,
