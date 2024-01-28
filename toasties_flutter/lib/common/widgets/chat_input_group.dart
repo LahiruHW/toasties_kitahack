@@ -4,12 +4,12 @@ class ChatInputGroup extends StatelessWidget {
   const ChatInputGroup({
     super.key,
     this.onSend,
-    this.onSendAudio,
+    this.onSave,
     required this.textController,
   });
 
   final VoidCallback? onSend;
-  final VoidCallback? onSendAudio;
+  final VoidCallback? onSave;
   final TextEditingController textController;
 
   @override
@@ -31,8 +31,8 @@ class ChatInputGroup extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
-                    onPressed: onSendAudio ?? () {},
-                    icon: const Icon(Icons.mic),
+                    onPressed: onSave ?? () {},
+                    icon: const Icon(Icons.save),
                     style: ButtonStyle(
                       padding: MaterialStateProperty.all<EdgeInsets>(
                         const EdgeInsets.all(10),
