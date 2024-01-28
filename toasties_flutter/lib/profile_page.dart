@@ -11,12 +11,9 @@ class ProfilePage extends StatelessWidget {
     super.key,
   });
 
-  // final GlobalKey<NavigatorState> _profileNavKey = GlobalKey<NavigatorState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // key: _profileNavKey,
       body: Consumer<ToastieAuthProvider>(
         builder: (context, provider, child) => Scaffold(
           body: Padding(
