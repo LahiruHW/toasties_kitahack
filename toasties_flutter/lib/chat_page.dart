@@ -50,6 +50,9 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (chats.isNotEmpty && chats.last.role == 'user') {
+      loading = true;
+    }
     return Scaffold(
       key: _chatNavKey,
       body: GestureDetector(
