@@ -35,9 +35,15 @@ class _ChatPageState extends State<ChatPage> {
     _textController = TextEditingController();
     _scrollController = ScrollController(keepScrollOffset: true);
     chats = LAILA.currentChatContentList;
-    LAILA.getAllInitContent().then(
+    LAILA
+        .getAllInitContent()
+        .then(
           (value) => setState(() => chats = LAILA.currentChatContentList),
-        ).onError((error, stackTrace) => setState(() => chats = LAILA.currentChatContentList));
+        )
+        .onError(
+          (error, stackTrace) =>
+              setState(() => chats = LAILA.currentChatContentList),
+        );
   }
 
   @override
@@ -50,15 +56,12 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (chats.isNotEmpty && chats.last.role == 'user') {
-      loading = true;
-    }
     return Scaffold(
       key: _chatNavKey,
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Consumer<ToastieStateProvider>(
-          builder: (context, authProvider, child) => Scaffold(
+          builder: (context, stateProvider, child) => Scaffold(
             body: Stack(
               children: [
                 Positioned.fill(
@@ -94,11 +97,9 @@ class _ChatPageState extends State<ChatPage> {
                   textController: _textController,
                   onSave: () {
                     print('======================= current Chat saved(?)');
-                    print('======================= $chats');
-                    // // call save function that takes the current content
-                    // // list, converts it to a Chat object, and saves it to
-                    // // the database
-                    // authProvider.saveCurrentChat();
+                    // print('======================= $chats');
+                    print('======================= ${stateProvider.currentChat}');
+                    // stateProvider.saveCurrentChat();
                   },
                   onSend: () {
                     // print(_textController.text);
@@ -107,7 +108,7 @@ class _ChatPageState extends State<ChatPage> {
                       isMsgUser: true,
                       content: _textController.text,
                     );
-                    authProvider.addToCurrentChat(newMsg);
+                    stateProvider.addToCurrentChat(newMsg);
 
                     final newContent = Content(
                       role: "user",
@@ -146,7 +147,7 @@ class _ChatPageState extends State<ChatPage> {
                             content:
                                 candidates.output ?? "ERROR RECEIVING MESSAGE",
                           );
-                          authProvider.addToCurrentChat(newMsg);
+                          stateProvider.addToCurrentChat(newMsg);
                         }
                       });
 

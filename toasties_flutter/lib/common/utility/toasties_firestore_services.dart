@@ -204,23 +204,14 @@ class ToastiesFirestoreServices {
     return userProfileDocRef(userID).update(data);
   }
 
-  /// update the user's currentChat data --> add a new message to the chat
-  static Future<void> sendCurrentChatMessage(
-      String userID, Map<String, dynamic> data) {
-    // userId --> currentChat --> msgs --> add new message
+  /// update the user's currentChat data
+  static Future<void> updateCurrentChatData(String userID, Chat currentChat) {
     return chatsDocRef(userID).update({
-      "currentChat": {
-        "msgs": FieldValue.arrayUnion([data])
-      }
+      'chatID': currentChat.chatID,
+      'chatName': currentChat.chatName,
+      'currentChat': currentChat.toJson(),
+      'timeSaved': Timestamp.now(),
     });
-  }
-
-  /// take the current chat and save it in a new document in the savedChats collection
-  static Future<void> saveChat(String userID, Map<String, dynamic> data) async {
-    data["timeSaved"] = Timestamp.now();
-    // ignore: unused_local_variable
-    final newDocRef = savedChatCollection(userID).add(data);
-    // DON'T UPDATE THE CURRENT CHAT unless the user restores another one
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////

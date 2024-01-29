@@ -19,6 +19,7 @@ class _TypingIndicatorState extends State<TypingIndicator> {
     return AnimatedContainer(
       padding: const EdgeInsets.symmetric(vertical: 5),
       duration: const Duration(milliseconds: 200),
+      color: Theme.of(context).colorScheme.background.withOpacity(0.5),
       height: widget.loading ? 30 : 0,
       child: Row(
         children: [
@@ -31,18 +32,9 @@ class _TypingIndicatorState extends State<TypingIndicator> {
               strokeWidth: 2,
             ),
           ),
-
-          // const Text(
-          //   'LAILA is typing...',
-          //   style: TextStyle(
-          //     color: Colors.grey,
-          //   ),
-          // )
-
           AnimatedTextKit(
             isRepeatingAnimation: true,
             repeatForever: true,
-
             animatedTexts: [
               TypewriterAnimatedText(
                 "LAILA is typing...",

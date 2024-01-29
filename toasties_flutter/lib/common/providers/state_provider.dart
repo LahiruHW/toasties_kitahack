@@ -78,6 +78,12 @@ class ToastieStateProvider extends ChangeNotifier {
   }
 
 
+  /// saved the current chat to the user's saved chats
+  void updateCurrentChat() async {
+    await ToastiesFirestoreServices.updateCurrentChatData(user!.uid, currentChat!);
+    notifyListeners();
+  }
+
   void addToCurrentChat(Message msg){
     currentChat!.addMessage(msg);
     notifyListeners();
