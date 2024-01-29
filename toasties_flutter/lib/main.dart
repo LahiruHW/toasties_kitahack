@@ -22,26 +22,6 @@ Future<void> main() async {
       ChangeNotifierProvider(
         create: (context) => ToastieAuthProvider(),
       ),
-
-      ChangeNotifierProvider(
-        create: (context) => ToastieStateProvider(),
-      ),
-
-      ChangeNotifierProvider(
-        create: (context) => ToastiesChatProvider(),
-      ),
-
-      // ChangeNotifierProxyProvider<ToastieAuthProvider, ToastiesChatProvider>(
-      //   create: (BuildContext context) {
-      //     return ToastiesChatProvider(userID: "");
-      //   },
-      //   update: (context, authProvider, ToastiesChatProvider? previous) {
-      //     previous!.userID = authProvider.user!.uid;
-      //     return ToastiesChatProvider(userID: authProvider.user!.uid);
-      //   },
-      //   lazy: true,
-      // )
-
     ],
     child: const LegalEaseApp(),
   );

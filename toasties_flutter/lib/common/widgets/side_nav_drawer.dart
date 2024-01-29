@@ -12,8 +12,6 @@ class ToastiesSideNavMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return Consumer2<ToastieAuthProvider, ToastieStateProvider>(
-    //   builder: (context, authProvider, stateProvider, child) => NavigationDrawer(
     return Consumer<ToastieAuthProvider>(
       builder: (context, authProvider, child) => NavigationDrawer(
         children: [
