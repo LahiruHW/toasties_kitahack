@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:toasties_flutter/common/providers/auth_provider.dart';
+import 'package:toasties_flutter/common/providers/state_provider.dart';
 import 'package:toasties_flutter/common/utility/toastie_auth.dart';
 import 'package:toasties_flutter/common/widgets/colour_switch_toggle.dart';
 import 'package:toasties_flutter/common/widgets/google_action_button.dart';
@@ -58,7 +58,7 @@ class _LoginTypeSelectPageState extends State<LoginTypeSelectPage> {
               GoogleActionButton(
                 onPressed: () {
                   final authProvider =
-                      Provider.of<ToastieAuthProvider>(context, listen: false);
+                      Provider.of<ToastieStateProvider>(context, listen: false);
                   authProvider.signInWithGoogle().then(
                     (value) {
                       Future.delayed(

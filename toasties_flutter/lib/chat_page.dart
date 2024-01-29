@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:provider/provider.dart';
 import 'package:toasties_flutter/common/entity/index.dart';
-import 'package:toasties_flutter/common/providers/auth_provider.dart';
+import 'package:toasties_flutter/common/providers/state_provider.dart';
 import 'package:toasties_flutter/common/widgets/chat_input_group.dart';
 import 'package:toasties_flutter/LAILA/engine.dart';
 import 'package:toasties_flutter/common/widgets/msg_bubble.dart';
@@ -54,7 +54,7 @@ class _ChatPageState extends State<ChatPage> {
       key: _chatNavKey,
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Consumer<ToastieAuthProvider>(
+        child: Consumer<ToastieStateProvider>(
           builder: (context, authProvider, child) => Scaffold(
             body: Stack(
               children: [

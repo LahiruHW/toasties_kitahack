@@ -20,7 +20,7 @@ Future<void> main() async {
   final appRuntime = MultiProvider(
     providers: [
       ChangeNotifierProvider(
-        create: (context) => ToastieAuthProvider(),
+        create: (context) => ToastieStateProvider(),
       ),
     ],
     child: const LegalEaseApp(),
@@ -44,7 +44,7 @@ class LegalEaseApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ToastieAuthProvider>(
+    return Consumer<ToastieStateProvider>(
       builder: (context, provider, child) => MaterialApp.router(
         routerConfig: ToastieRouter.router,
         title: 'LegalEase',

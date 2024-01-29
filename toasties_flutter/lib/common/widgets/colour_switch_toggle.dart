@@ -1,7 +1,7 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:toasties_flutter/common/providers/auth_provider.dart';
+import 'package:toasties_flutter/common/providers/state_provider.dart';
 // import 'package:toasties_flutter/common/providers/state_provider.dart';
 
 class ToastiesThemeModeToggle extends StatefulWidget {
@@ -28,7 +28,7 @@ class _ToastiesThemeModeToggleState extends State<ToastiesThemeModeToggle> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ToastieAuthProvider>(context, listen: false);
+    final provider = Provider.of<ToastieStateProvider>(context, listen: false);
     return SizedBox(
       child: AnimatedToggleSwitch<bool>.dual(
         animationCurve: Curves.easeInOut,

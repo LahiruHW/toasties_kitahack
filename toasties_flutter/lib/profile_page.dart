@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:toasties_flutter/common/providers/auth_provider.dart';
+import 'package:toasties_flutter/common/providers/state_provider.dart';
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({
@@ -14,7 +14,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<ToastieAuthProvider>(
+      body: Consumer<ToastieStateProvider>(
         builder: (context, provider, child) => Scaffold(
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),

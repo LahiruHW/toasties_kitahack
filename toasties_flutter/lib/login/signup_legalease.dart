@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:toasties_flutter/common/providers/auth_provider.dart';
+import 'package:toasties_flutter/common/providers/state_provider.dart';
 import 'package:toasties_flutter/common/utility/toastie_auth.dart';
 
 /// Login page for LegalEase User Accounts, does not validate password for obvious reasons
@@ -125,7 +125,7 @@ class _SignupLegalEaseState extends State<SignupLegalEase> {
   @override
   Widget build(BuildContext context) {
     final authProvider =
-        Provider.of<ToastieAuthProvider>(context, listen: false);
+        Provider.of<ToastieStateProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Padding(

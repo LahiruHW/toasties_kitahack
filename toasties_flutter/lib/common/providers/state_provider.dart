@@ -6,19 +6,19 @@ import 'package:toasties_flutter/common/utility/toastie_auth.dart';
 import 'package:toasties_flutter/common/utility/toasties_firestore_services.dart';
 
 /// Provider for the current user instance
-class ToastieAuthProvider extends ChangeNotifier {
+class ToastieStateProvider extends ChangeNotifier {
   User? user;
   UserLocalProfile userProfile = UserLocalProfile(settings: UserSettings());
   Chat? currentChat;
   List<Chat>? savedChats;
   final authService = ToastiesAuthService();
 
-  ToastieAuthProvider() {
+  ToastieStateProvider() {
     authService.onAuthStateChanged.listen(
       (User? newUser) => newUser != null ? setUserInstance(newUser) : null,
     );
 
-    debugPrint('------------------------------ AuthProvider initialized');
+    debugPrint('------------------------------ StateProvider initialized');
   }
 
   /// calls the sign in with email and password method from the auth service
@@ -92,7 +92,7 @@ class ToastieAuthProvider extends ChangeNotifier {
   /// set all the user instance data after login or signup
   void setUserInstance(User user) async {
     this.user = user;
-    debugPrint('------------------------------ AuthProvider user set');
+    debugPrint('------------------------------ StateProvider user set');
     notifyListeners();
   }
 
@@ -110,7 +110,7 @@ class ToastieAuthProvider extends ChangeNotifier {
     savedChats = null;
     LAILA.shutdownEngine();
     debugPrint(
-        '------------------------------ AuthProvider user signed out & cleared');
+        '------------------------------ StateProvider user signed out & cleared');
     notifyListeners();
   }
 

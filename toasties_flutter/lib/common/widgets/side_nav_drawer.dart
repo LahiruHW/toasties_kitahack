@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:toasties_flutter/common/providers/auth_provider.dart';
+import 'package:toasties_flutter/common/providers/state_provider.dart';
 import 'package:toasties_flutter/common/providers/index.dart';
 import 'package:toasties_flutter/common/utility/toasties_firestore_services.dart';
 
@@ -12,7 +12,7 @@ class ToastiesSideNavMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ToastieAuthProvider>(
+    return Consumer<ToastieStateProvider>(
       builder: (context, authProvider, child) => NavigationDrawer(
         children: [
           Container(
