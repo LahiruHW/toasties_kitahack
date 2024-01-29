@@ -34,10 +34,10 @@ class _ChatPageState extends State<ChatPage> {
     super.initState();
     _textController = TextEditingController();
     _scrollController = ScrollController(keepScrollOffset: true);
-    LAILA.getAllInitContent().then(
-          (value) => LAILA.currentChatContentList,
-        );
     chats = LAILA.currentChatContentList;
+    LAILA.getAllInitContent().then(
+          (value) => setState(() => chats = LAILA.currentChatContentList),
+        ).onError((error, stackTrace) => setState(() => chats = LAILA.currentChatContentList));
   }
 
   @override
