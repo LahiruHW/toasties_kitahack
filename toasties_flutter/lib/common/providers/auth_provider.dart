@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:toasties_flutter/LAILA/engine.dart';
 import 'package:toasties_flutter/common/entity/index.dart';
 import 'package:toasties_flutter/common/utility/toastie_auth.dart';
 import 'package:toasties_flutter/common/utility/toasties_firestore_services.dart';
@@ -29,6 +30,7 @@ class ToastieAuthProvider extends ChangeNotifier {
         userProfile = dataMap['userProfile'];
         currentChat = dataMap['currentChat'];
         savedChats = dataMap['savedChats'];
+        convertCurrentChatToContentList();
         notifyListeners();
       },
     ).onError(
@@ -46,6 +48,7 @@ class ToastieAuthProvider extends ChangeNotifier {
         userProfile = dataMap['userProfile'];
         currentChat = dataMap['currentChat'];
         savedChats = dataMap['savedChats'];
+        convertCurrentChatToContentList();
         notifyListeners();
       },
     ).onError(
@@ -66,6 +69,7 @@ class ToastieAuthProvider extends ChangeNotifier {
         userProfile = dataMap['userProfile'];
         currentChat = dataMap['currentChat'];
         savedChats = dataMap['savedChats'];
+        convertCurrentChatToContentList();
         notifyListeners();
       },
     ).onError(
@@ -79,6 +83,10 @@ class ToastieAuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void convertCurrentChatToContentList() {
+    LAILA.getContentListFromChat(currentChat!);
+    debugPrint('------------------------------ currentChat converted to content list');
+  } 
 
 
   /// set all the user instance data after login or signup
@@ -100,6 +108,7 @@ class ToastieAuthProvider extends ChangeNotifier {
     userProfile = UserLocalProfile(settings: UserSettings());
     currentChat = null;
     savedChats = null;
+    LAILA.shutdownEngine();
     debugPrint(
         '------------------------------ AuthProvider user signed out & cleared');
     notifyListeners();

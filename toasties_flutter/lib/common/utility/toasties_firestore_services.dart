@@ -149,7 +149,7 @@ class ToastiesFirestoreServices {
   static Future<List<Map<String, dynamic>>> getAllSavedChatData(String userID) {
     return savedChatCollection(userID).get().then((querySnap) {
       // var data = querySnap.docs.map((doc) => doc.data()).toList();
-      
+
       // only get all the saved chats that are not the default one
       var data = querySnap.docs
           .where((doc) => doc.id != "default")
@@ -267,24 +267,21 @@ class ToastiesFirestoreServices {
     /// initialize a new user's profile data{
     final newChat = Chat(msgs: [
       Message(
-          timeCreated: Timestamp.now(),
-          isMsgUser: true,
-          content: "Hello LAILA"),
+        timeCreated: Timestamp.now(),
+        isMsgUser: true,
+        content: "Hello LAILA",
+      ),
       Message(
-          timeCreated: Timestamp.now(),
-          isMsgUser: false,
-          content: "Hello USER"),
+        timeCreated: Timestamp.now(),
+        isMsgUser: false,
+        content:
+            "My name is LAILA (lˈe͡ɪlə), your legal assistant👋. Happy to be in your service! Let me know what I can do for you. To communicate with me, you can type ⌨️, take a photo 📸, or just talk with me 🎙️.",
+      ),
       Message(
-          timeCreated: Timestamp.now(),
-          isMsgUser: false,
-          content:
-              "My name is LAILA (lˈe͡ɪlə), your legal assistant👋. Happy to be in your service! Let me know what I can do for you. To communicate with me, you can type ⌨️, take a photo 📸, or just talk with me 🎙️."),
-      Message(
-          timeCreated: Timestamp.now(),
-          isMsgUser: true,
-          content: "How are you?"),
-      Message(
-          timeCreated: Timestamp.now(), isMsgUser: false, content: "I'm fine!"),
+        timeCreated: Timestamp.now(),
+        isMsgUser: true,
+        content: "How are you?",
+      ),
     ]);
 
     await chatsDocRef(userID).update({

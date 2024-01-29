@@ -41,10 +41,14 @@ class _TypingIndicatorState extends State<TypingIndicator> {
 
           AnimatedTextKit(
             isRepeatingAnimation: true,
+            repeatForever: true,
+
             animatedTexts: [
               TypewriterAnimatedText(
                 "LAILA is typing...",
                 speed: const Duration(milliseconds: 100),
+                cursor: "|",
+                curve: Curves.easeInOut,
                 textStyle: const TextStyle(
                   color: Colors.grey,
                   fontSize: 12,

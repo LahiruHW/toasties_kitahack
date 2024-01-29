@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 // import 'package:flutter_gemini/flutter_gemini.dart';
 // import 'package:toasties_flutter/common/entity/message.dart';
 
@@ -8,12 +9,10 @@ class ToastieChatBubble extends StatelessWidget {
     super.key,
     required this.isMsgUser,
     required this.child,
-    // required this.message,
   });
 
   final bool isMsgUser;
   final Widget child;
-  // final Message message;
 
   final _bubbleVerticalGap = 6.0;
 
@@ -76,5 +75,17 @@ class ToastieChatBubble extends StatelessWidget {
 
     return const Text("❌❌ CHILD WIDGET ERROR ❌❌");
   }
-}
 
+  factory ToastieChatBubble.fromContent(Content content) {
+    return ToastieChatBubble(
+      isMsgUser: content.role == 'user',
+      child: Text(
+        content.parts?.lastOrNull?.text ?? "❌❌ ERROR ❌❌",
+        style: TextStyle(
+          color: content.role == 'user' ? Colors.black: Colors.white,
+        ),
+      ),
+    );
+  }
+
+}
