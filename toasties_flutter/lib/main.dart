@@ -19,7 +19,6 @@ Future<void> main() async {
   //  - ChangeNotifierProvider provides the state of the app
   final appRuntime = MultiProvider(
     providers: [
-      
       ChangeNotifierProvider(
         create: (context) => ToastieAuthProvider(),
       ),
@@ -65,14 +64,13 @@ class LegalEaseApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return Consumer<ToastieStateProvider>(
     return Consumer<ToastieAuthProvider>(
       builder: (context, provider, child) => MaterialApp.router(
         routerConfig: ToastieRouter.router,
         title: 'LegalEase',
-        themeMode:
-            // provider.settings.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-            provider.userProfile.settings.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+        themeMode: provider.userProfile.settings.isDarkMode
+            ? ThemeMode.dark
+            : ThemeMode.light,
         theme: ToastiesAppTheme.lightTheme,
         darkTheme: ToastiesAppTheme.darkTheme,
         themeAnimationDuration: const Duration(milliseconds: 500),
