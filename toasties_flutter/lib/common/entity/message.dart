@@ -41,9 +41,32 @@ class Message {
     );
   }
 
+  /// used for firebase storage
+  Map<String, dynamic> toJson() {
+    // convert timestamp to string
+    final timeCreatedString = timeCreated.toDate().toString();
+    return {
+      'timeCreated': timeCreatedString,
+      'isMsgUser': isMsgUser,
+      // 'content': processedContent,
+      'content': content,
+    };
+  }
+
+  /// used for firebase storage
+  factory Message.fromJson(Map<String, dynamic> json) {
+    // convert string to timestamp
+    final timeCreated = Timestamp.fromDate(DateTime.parse(json['timeCreated']));
+    return Message(
+      isMsgUser: json['isMsgUser'],
+      content: json['content'],
+      timeCreated: timeCreated,
+    );
+  }
+
   @override
   String toString() {
     final timeInfo = timeCreated.toDate().toString();
-    return '$timeInfo --> ${isMsgUser ? "User" : "LAILA"} : $content';
+    return 'Message: {$timeInfo --> ${isMsgUser ? "User" : "LAILA"} : $content}';
   }
 }

@@ -19,7 +19,8 @@ class UserSettings {
     String? lastUpdatedString,
   }) {
     final currrentTimeStamp = Timestamp.now();
-    final currrentTimeStampString = currrentTimeStamp.toDate().toIso8601String(); // for debugging
+    final currrentTimeStampString =
+        currrentTimeStamp.toDate().toIso8601String(); // for debugging
 
     this.isDarkMode = isDarkMode ?? this.isDarkMode;
     this.lastUpdated = currrentTimeStamp;
@@ -27,8 +28,7 @@ class UserSettings {
     print('Settings updated: $this');
   }
 
-  /// DON'T USE THIS YET - Lahiru
-  factory UserSettings.fromJson(Map<String, dynamic> json) {
+  factory UserSettings.fromMap(Map<String, dynamic> json) {
     return UserSettings(
       isDarkMode: json['isDarkMode'],
       lastUpdated: json['lastUpdated'],
@@ -36,14 +36,36 @@ class UserSettings {
     );
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         'isDarkMode': isDarkMode,
         'lastUpdated': lastUpdated ?? Timestamp.now(),
       };
+
+  /// used for firebase storage
+  factory UserSettings.fromJson(Map<String, dynamic> json) {
+    // convert string to timestamp
+    final lastUpdatedTemp = Timestamp.fromDate(
+      DateTime.parse(json['lastUpdated']),
+    );
+    return UserSettings(
+      isDarkMode: json['isDarkMode'],
+      lastUpdated: lastUpdatedTemp,
+      lastUpdatedString: json['lastUpdatedString'],
+    );
+  }
+
+  /// used for firebase storage
+  Map<String, dynamic> toJson() {
+    // convert timestamp to string
+    final timestampStr = (lastUpdated ?? Timestamp.now()).toDate().toString();
+    return {
+      'isDarkMode': isDarkMode,
+      'lastUpdated': timestampStr,
+    };
+  }
 
   @override
   String toString() {
     return 'Settings: {isDarkMode: $isDarkMode, lastUpdated: $lastUpdated, lastUpdatedString: $lastUpdatedString}';
   }
-
 }

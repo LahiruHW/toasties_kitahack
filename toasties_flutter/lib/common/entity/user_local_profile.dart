@@ -13,13 +13,13 @@ class UserLocalProfile{
   factory UserLocalProfile.fromJson(Map<String, dynamic> json) {
     return UserLocalProfile(
       userName: json['userName'],
-      settings: UserSettings.fromJson(json['settings']),
+      settings: UserSettings.fromMap(json['settings']),
     );
   }
 
   Map<String, dynamic> toJson() => {
         'userName': userName,
-        'settings': settings.toJson()
+        'settings': settings.toMap()
       };
 
   @override

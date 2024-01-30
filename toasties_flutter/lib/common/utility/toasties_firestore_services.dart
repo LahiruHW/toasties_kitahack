@@ -1,10 +1,11 @@
-// include all the utility functions for firebase services here as static functions
+// include all the utility functions for cloud firestore services here as static functions
 
 // ignore_for_file: prefer_function_declarations_over_variables
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:toasties_flutter/common/entity/index.dart';
+import 'package:toasties_flutter/common/utility/toastie_storage_services.dart';
 
 class ToastiesFirestoreServices {
   // References to the ddb collections
@@ -50,7 +51,7 @@ class ToastiesFirestoreServices {
 
       final currentChat =
           await getCurrentChatData(userID).then((currentChatData) {
-        final currentChat = Chat.fromJson(currentChatData);
+        final currentChat = Chat.fromMap(currentChatData);
         debugPrint("--------------- CURRENT CHAT: $currentChat");
         return currentChat;
       });
@@ -62,11 +63,14 @@ class ToastiesFirestoreServices {
           return [];
         } else {
           final savedChats =
-              savedChatsData.map((json) => Chat.fromJson(json)).toList();
+              savedChatsData.map((json) => Chat.fromMap(json)).toList();
           debugPrint("--------------- SAVED CHATs: $savedChatsData");
           return savedChats;
         }
       });
+
+      final currentChatInStorage = await ToastiesFirebaseStorageServices.readCurrentChatFile(userID);
+      debugPrint("--------------- CURRENT CHAT IN FBSTORAGE: $currentChatInStorage");
 
       returnMap['userProfile'] = userProfile;
       returnMap['currentChat'] = currentChat;
@@ -102,7 +106,7 @@ class ToastiesFirestoreServices {
     await userProfileDocRef(userID).set(userProfile.toJson());
 
     await chatsDocRef(userID).set({
-      'currentChat': newChat.toJson(),
+      'currentChat': newChat.toMap(),
     });
 
     await savedChatCollection(userID).doc("default").set({
@@ -141,7 +145,7 @@ class ToastiesFirestoreServices {
   /// get a Future of the user's currentChat data from firestore
   static Future<Chat> getCurrentChat(String userID) async {
     final json = await getCurrentChatData(userID);
-    final currentChat = Chat.fromJson(json);
+    final currentChat = Chat.fromMap(json);
     return currentChat;
   }
 
@@ -167,7 +171,7 @@ class ToastiesFirestoreServices {
   /// get a Future list of all the saved chats
   static Future<List<Chat>> getAllSavedChats(String userID) async {
     final jsonList = await getAllSavedChatData(userID);
-    final savedChats = jsonList.map((json) => Chat.fromJson(json)).toList();
+    final savedChats = jsonList.map((json) => Chat.fromMap(json)).toList();
     return savedChats;
   }
 
@@ -209,7 +213,7 @@ class ToastiesFirestoreServices {
     return chatsDocRef(userID).update({
       'chatID': currentChat.chatID,
       'chatName': currentChat.chatName,
-      'currentChat': currentChat.toJson(),
+      'currentChat': currentChat.toMap(),
       'timeSaved': Timestamp.now(),
     });
   }
@@ -276,7 +280,7 @@ class ToastiesFirestoreServices {
     ]);
 
     await chatsDocRef(userID).update({
-      'currentChat': newChat.toJson(),
+      'currentChat': newChat.toMap(),
     });
   }
 }
