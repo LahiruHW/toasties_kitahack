@@ -27,22 +27,22 @@ class _ChatPageState extends State<ChatPage> {
   set loading(bool set) => setState(() => _loading = set);
   bool get loading => _loading;
 
-  late final List<Content> chats;
+  late final List<Content> chatContent;
 
   @override
   void initState() {
     super.initState();
     _textController = TextEditingController();
     _scrollController = ScrollController(keepScrollOffset: true);
-    chats = LAILA.currentChatContentList;
+    chatContent = LAILA.currentChatContentList;
     LAILA
         .getAllInitContent()
         .then(
-          (value) => setState(() => chats = LAILA.currentChatContentList),
+          (value) => setState(() => chatContent = LAILA.currentChatContentList),
         )
         .onError(
           (error, stackTrace) =>
-              setState(() => chats = LAILA.currentChatContentList),
+              setState(() => chatContent = LAILA.currentChatContentList),
         );
   }
 
@@ -50,7 +50,7 @@ class _ChatPageState extends State<ChatPage> {
   void dispose() {
     _textController.dispose();
     _scrollController.dispose();
-    chats.clear();
+    chatContent.clear();
     super.dispose();
   }
 
@@ -68,20 +68,29 @@ class _ChatPageState extends State<ChatPage> {
                   bottom: 60,
                   child: Column(
                     children: [
-                      chats.isNotEmpty
+                      chatContent.isNotEmpty
                           ? Expanded(
                               child: StreamBuilder(
-                                initialData: LAILA.gemini.chat(chats),
-                                stream: LAILA.gemini.streamChat(chats),
+                                initialData: LAILA.gemini.chat(chatContent),
+                                stream: LAILA.gemini.streamChat(chatContent),
                                 builder: (context, snapshot) {
                                   return ListView.builder(
                                     controller: _scrollController,
                                     shrinkWrap: true,
-                                    itemCount: chats.length,
+                                    itemCount: chatContent.length,
                                     itemBuilder: (context, index) {
-                                      return ToastieChatBubble.fromContent(
-                                        chats[index],
-                                      );
+                                      // check if the text is empty
+                                      if (chatContent[index]
+                                          .parts!
+                                          .last
+                                          .text!
+                                          .isEmpty) {
+                                        return null;
+                                      } else {
+                                        return ToastieChatBubble.fromContent(
+                                          chatContent[index],
+                                        );
+                                      }
                                     },
                                   );
                                 },
@@ -96,21 +105,23 @@ class _ChatPageState extends State<ChatPage> {
                 ChatInputGroup(
                   textController: _textController,
                   onSave: () {
-                    print('======================= current Chat saved(?)');
-                    // print('======================= $chats');
-                    print('======================= ${stateProvider.currentChat}');
+                    // print('======================= current Chat saved(?)');
+                    // print('======================= $chatContent');
+                    // print('===================== ${stateProvider.currentChat}');
                     // stateProvider.saveCurrentChat();
+                    stateProvider.updateCurrentChatInFirebaseStorageTEMP();
                   },
                   onSend: () {
-                    // print(_textController.text);
-                    final newMsg = Message(
+                    // 1. add the user's message to the chat object
+                    final newUserMsg = Message(
                       timeCreated: Timestamp.now(),
                       isMsgUser: true,
                       content: _textController.text,
                     );
-                    stateProvider.addToCurrentChat(newMsg);
+                    stateProvider.addToCurrentChat(newUserMsg);
 
-                    final newContent = Content(
+                    // 2. add the user's message Content to the chat content list
+                    final newUserContent = Content(
                       role: "user",
                       parts: [
                         Parts(
@@ -118,36 +129,39 @@ class _ChatPageState extends State<ChatPage> {
                         ),
                       ],
                     );
-
-                    setState(() => chats.add(newContent));
-
+                    setState(() => chatContent.add(newUserContent));
                     _textController.clear();
                     loading = true;
 
-                    LAILA.gemini.streamChat(chats).listen((candidates) {
+                    // 3. send the chat content list to LAILA and update the local content list as the model responds
+                    LAILA.gemini.streamChat(chatContent).listen((candidates) {
                       loading = false;
                       setState(() {
-                        // check if the last message in the chat is from the user
-                        if (chats.isNotEmpty &&
-                            chats.last.role == candidates.content?.role) {
+                        if (chatContent.isNotEmpty &&
+                            chatContent.last.role == candidates.content?.role) {
+                          final tempStr =
+                              '${chatContent.last.parts!.last.text}${candidates.output}';
                           // if it is, then add the candidates output to the last message
-                          chats.last.parts!.last.text =
-                              '${chats.last.parts!.last.text}${candidates.output}';
-                        }
-                        // if it isn't, then just add a new message to the chat (both locally and in the database)
-                        else {
-                          final newContent = Content(
-                            role: 'model',
-                            parts: [Parts(text: candidates.output)],
+                          chatContent.last.parts!.last.text = tempStr;
+                          // also update the last message in the local chat object
+                          stateProvider.currentChat!.msgs!.last.content =
+                              tempStr;
+                        } else {
+                          final newModelContent = Content(
+                            role: "model",
+                            parts: [
+                              Parts(
+                                text: candidates.output,
+                              ),
+                            ],
                           );
-                          chats.add(newContent);
-                          final newMsg = Message(
+                          chatContent.add(newModelContent);
+                          final newModelMsg = Message(
                             timeCreated: Timestamp.now(),
                             isMsgUser: false,
-                            content:
-                                candidates.output ?? "ERROR RECEIVING MESSAGE",
+                            content: chatContent.last.parts!.last.text!,
                           );
-                          stateProvider.addToCurrentChat(newMsg);
+                          stateProvider.addToCurrentChat(newModelMsg);
                         }
                       });
 
