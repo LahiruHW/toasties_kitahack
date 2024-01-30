@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 // import 'package:flutter_gemini/flutter_gemini.dart';
 // import 'package:toasties_flutter/common/entity/message.dart';
 
@@ -63,15 +64,9 @@ class ToastieChatBubble extends StatelessWidget {
   Widget _buildChild(BuildContext context) {
     if (child is Text) {
       return child;
+    } else if (child is Markdown) {
+      return child;
     }
-
-    // if (child is Image) {
-    //   return child;
-    // }
-
-    // if (child is GeminiResponseTypeView) {
-    //   return child;
-    // }
 
     return const Text("❌❌ CHILD WIDGET ERROR ❌❌");
   }
@@ -79,13 +74,28 @@ class ToastieChatBubble extends StatelessWidget {
   factory ToastieChatBubble.fromContent(Content content) {
     return ToastieChatBubble(
       isMsgUser: content.role == 'user',
-      child: Text(
-        content.parts?.lastOrNull?.text ?? "❌❌ ERROR ❌❌",
-        style: TextStyle(
-          color: content.role == 'user' ? Colors.black: Colors.white,
-        ),
-      ),
+      child: content.role == 'user'
+          ? Text(
+              content.parts?.lastOrNull?.text ?? "❌❌ ERROR ❌❌",
+              style: TextStyle(
+                color: content.role == 'user' ? Colors.black : Colors.white,
+              ),
+            )
+          : Markdown(
+              data: content.parts?.lastOrNull?.text ?? "❌❌ ERROR ❌❌",
+              selectable: true,
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(0),
+              listItemCrossAxisAlignment:
+                  MarkdownListItemCrossAxisAlignment.start,
+              physics: const NeverScrollableScrollPhysics(),
+              softLineBreak: true,
+              styleSheet: MarkdownStyleSheet(
+                p: TextStyle(
+                  color: content.role == 'user' ? Colors.black : Colors.white,
+                ),
+              ),
+            ),
     );
   }
-
 }
