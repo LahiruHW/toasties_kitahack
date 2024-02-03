@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 // import 'package:provider/provider.dart';
 
-import 'package:toasties_flutter/base.dart';
+import 'package:toasties_flutter/screens/base.dart';
 // import 'package:toasties_flutter/common/providers/state_provider.dart';
-import 'package:toasties_flutter/login/entrance_base.dart';
-import 'package:toasties_flutter/login/login_legalease.dart';
-import 'package:toasties_flutter/login/login_select.dart';
-import 'package:toasties_flutter/login/signup_legalease.dart';
-import 'package:toasties_flutter/home_page.dart';
-import 'package:toasties_flutter/chat_page.dart';
-import 'package:toasties_flutter/saved_page.dart';
-import 'package:toasties_flutter/profile_page.dart';
-import 'package:toasties_flutter/testpages.dart';
+import 'package:toasties_flutter/screens/login/entrance_base.dart';
+import 'package:toasties_flutter/screens/login/login_legalease.dart';
+import 'package:toasties_flutter/screens/login/login_select.dart';
+import 'package:toasties_flutter/screens/login/signup_legalease.dart';
+import 'package:toasties_flutter/screens/home_page.dart';
+import 'package:toasties_flutter/screens/chat_page.dart';
+import 'package:toasties_flutter/screens/saved_page.dart';
+import 'package:toasties_flutter/screens/profile_page.dart';
+import 'package:toasties_flutter/screens/testpages.dart';
 import 'package:toasties_flutter/common/settings_page.dart';
 
 class ToastieRouter {

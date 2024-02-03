@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SavedPage extends StatelessWidget{
-  SavedPage({
+  const SavedPage({
     super.key,
   });
 
