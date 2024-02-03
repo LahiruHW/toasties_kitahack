@@ -1,20 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:toasties_flutter/common/entity/message.dart';
+import 'package:toasties_flutter/common/utility/toasties_firestore_services.dart';
 
 class Chat {
-  String? chatName;
-  List<Message>? msgs = [];
-  Timestamp? timeSaved;
-  String? chatID; // if saved before, this field will be populated
+  late String chatName;
+  late List<Message> msgs;
+  late Timestamp timeSaved;
+  late String chatID; // if saved before, this field will be populated
 
-  Chat(
-      {this.chatName = "New Consultation",
-      this.msgs,
-      this.timeSaved,
-      this.chatID});
+  Chat({
+    required this.chatName,
+    required this.msgs,
+    required this.timeSaved,
+    required this.chatID,
+  });
 
   void addMessage(Message message) {
-    msgs!.add(message);
+    msgs.add(message);
     timeSaved = message.timeCreated;
   }
 
@@ -30,10 +32,10 @@ class Chat {
   Map<String, dynamic> toMap() {
     return {
       'chatName': chatName,
-      'msgs': msgs == null
+      'msgs': msgs.isEmpty
           ? FieldValue.arrayUnion([])
-          : msgs!.map((x) => x.toMap()).toList(),
-      'timeSaved': timeSaved ?? Timestamp.now(),
+          : msgs.map((x) => x.toMap()).toList(),
+      'timeSaved': timeSaved,
       'chatID': chatID,
     };
   }
@@ -44,7 +46,7 @@ class Chat {
     final timeSaved = Timestamp.fromDate(DateTime.parse(json['timeSaved']));
     return Chat(
       chatName: json['chatName'],
-      msgs: List<Message>.from(json['msgs']?.map((x) => Message.fromMap(x))),
+      msgs: List<Message>.from(json['msgs']?.map((x) => Message.fromJson(x))),
       timeSaved: timeSaved,
       chatID: json['chatID'],
     );
@@ -53,19 +55,27 @@ class Chat {
   /// used for firebase storage
   Map<String, dynamic> toJson() {
     // convert timestamp to string
-    final timeSavedString = timeSaved!.toDate().toString();
+    final timeSavedString = timeSaved.toDate().toString();
     return {
       'chatName': chatName,
-      'msgs': msgs == null
-          ? FieldValue.arrayUnion([])
-          : msgs!.map((x) => x.toJson()).toList(),
+      'msgs': msgs.isEmpty ? [] : msgs.map((x) => x.toJson()).toList(),
       'timeSaved': timeSavedString,
       'chatID': chatID,
     };
   }
 
+  factory Chat.empty() {
+    final newChatID = ToastiesFirestoreServices.chatCollection.doc().id;
+    return Chat(
+      chatName: "New Consultation",
+      msgs: [],
+      timeSaved: Timestamp.now(),
+      chatID: newChatID,
+    );
+  }
+
   @override
   String toString() {
-    return 'Chat: {chatName: $chatName, lastMesage: ${msgs!.last}, msgCount: ${msgs!.length}, timeSaved: $timeSaved, chatID: $chatID}';
+    return 'Chat: {chatName: $chatName, lastMesage: ${msgs == <Message>[] ? msgs.last : "NULL"}, msgCount: ${msgs == <Message>[] ? 0 : msgs.length}, timeSaved: $timeSaved, chatID: $chatID}';
   }
 }

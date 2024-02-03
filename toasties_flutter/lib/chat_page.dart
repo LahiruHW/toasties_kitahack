@@ -143,9 +143,14 @@ class _ChatPageState extends State<ChatPage> {
                               '${chatContent.last.parts!.last.text}${candidates.output}';
                           // if it is, then add the candidates output to the last message
                           chatContent.last.parts!.last.text = tempStr;
+
                           // also update the last message in the local chat object
-                          stateProvider.currentChat!.msgs!.last.content =
-                              tempStr;
+                          if (stateProvider.currentChat!.msgs.isNotEmpty) {
+                            stateProvider.currentChat!.msgs.last.content =
+                                tempStr;
+                          }
+                          // stateProvider.currentChat!.msgs.last.content = tempStr;
+                        
                         } else {
                           final newModelContent = Content(
                             role: "model",

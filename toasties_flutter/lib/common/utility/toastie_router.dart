@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 
 import 'package:toasties_flutter/base.dart';
-import 'package:toasties_flutter/common/providers/state_provider.dart';
+// import 'package:toasties_flutter/common/providers/state_provider.dart';
 import 'package:toasties_flutter/login/entrance_base.dart';
 import 'package:toasties_flutter/login/login_legalease.dart';
 import 'package:toasties_flutter/login/login_select.dart';
@@ -113,9 +113,13 @@ class ToastieRouter {
                     const MaterialPage(child: ChatPage(), maintainState: true),
                 routes: const [],
                 onExit: (context) {
-                  final authProvider =
-                      Provider.of<ToastieStateProvider>(context, listen: false);
-                  authProvider.updateCurrentChat();
+                  // final stateProvider =
+                  //     Provider.of<ToastieStateProvider>(context, listen: false);
+                  
+                  // stateProvider.updateCurrentChatID();
+
+                  // stateProvider.updateCurrentChatInFirebaseStorageTEMP();
+                  
                   return true;
                 },
               ),

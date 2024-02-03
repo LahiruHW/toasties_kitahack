@@ -4,8 +4,11 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:toasties_flutter/common/constants/enum_login_types.dart';
 import 'package:toasties_flutter/common/entity/index.dart';
+import 'package:toasties_flutter/common/utility/toastie_auth.dart';
 import 'package:toasties_flutter/common/utility/toastie_storage_services.dart';
+// import 'package:toasties_flutter/common/utility/toastie_storage_services.dart';
 
 class ToastiesFirestoreServices {
   // References to the ddb collections
@@ -19,8 +22,8 @@ class ToastiesFirestoreServices {
   static final currentchatRef = (userId) => chatsDocRef(userId)
       .get()
       .then((docSnap) => docSnap.data()?["currentChat"]);
-  static final savedChatCollection =
-      (userId) => chatsDocRef(userId).collection("savedChats");
+  // static final savedChatCollection =
+  //     (userId) => chatsDocRef(userId).collection("savedChats");
 
   // /////////////////////////////////////////////////////////////////////////////////////////////
   // /////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,7 +32,8 @@ class ToastiesFirestoreServices {
 
   /// initialize user profile - username can be null for a firstime google login
   static Future<Map<String, dynamic>> setupUserProfile(
-      String userID, String? userName) async {
+      String userID, String? userName,
+      {LoginType? loginType}) async {
     // only initialize the user profile if it doesn't exist - needed for google login
     final userProfile = await userProfileDocRef(userID).get();
 
@@ -42,35 +46,42 @@ class ToastiesFirestoreServices {
     if (userProfile.exists) {
       debugPrint("--------------- PROFILE ALREADY EXISTS IN FIREBASE");
 
-      final userProfile =
+      final UserLocalProfile userProfile =
           await getUserProfileData(userID).then((userProfileData) {
-        final userProfile = UserLocalProfile.fromJson(userProfileData);
+        final userProfile = UserLocalProfile.fromMap(userProfileData);
         debugPrint("--------------- LOCAL PROFILE: $userProfile");
         return userProfile;
       });
 
-      final currentChat =
-          await getCurrentChatData(userID).then((currentChatData) {
-        final currentChat = Chat.fromMap(currentChatData);
-        debugPrint("--------------- CURRENT CHAT: $currentChat");
-        return currentChat;
-      });
+      // first get the current chat id from the firestore and fetch the chat data from the storage
+      final Chat currentChat = await getCurrentChatID(userID).then(
+        (currentChatID) async =>
+            await ToastiesFirebaseStorageServices.getChatFile(
+          userID,
+          currentChatID,
+        ).then((currentChatData) {
+          final currentChat = Chat.fromJson(currentChatData);
+          debugPrint("--------------- CURRENT CHAT: $currentChat");
+          return currentChat;
+        }),
+      );
 
-      final List<Chat> savedChats =
-          await getAllSavedChatData(userID).then((savedChatsData) {
-        if (savedChatsData.isEmpty) {
-          debugPrint("--------------- NO SAVED CHATS");
-          return [];
-        } else {
-          final savedChats =
-              savedChatsData.map((json) => Chat.fromMap(json)).toList();
-          debugPrint("--------------- SAVED CHATs: $savedChatsData");
-          return savedChats;
-        }
-      });
+      final savedChats = []; // just fetch the saved chats from the storage
+      // final List<Chat> savedChats =
+      //     await getAllSavedChatData(userID).then((savedChatsData) {
+      //   if (savedChatsData.isEmpty) {
+      //     debugPrint("--------------- NO SAVED CHATS");
+      //     return [];
+      //   } else {
+      //     final savedChats =
+      //         savedChatsData.map((json) => Chat.fromMap(json)).toList();
+      //     debugPrint("--------------- SAVED CHATs: $savedChatsData");
+      //     return savedChats;
+      //   }
+      // });
 
-      final currentChatInStorage = await ToastiesFirebaseStorageServices.readCurrentChatFile(userID);
-      debugPrint("--------------- CURRENT CHAT IN FBSTORAGE: $currentChatInStorage");
+      // final currentChatInStorage = await ToastiesFirebaseStorageServices.readCurrentChatFile(userID);
+      // debugPrint("--------------- CURRENT CHAT IN FBSTORAGE: $currentChatInStorage");
 
       returnMap['userProfile'] = userProfile;
       returnMap['currentChat'] = currentChat;
@@ -78,40 +89,65 @@ class ToastiesFirestoreServices {
 
       return returnMap;
     } else {
+      // if the new login type is google, generate a random name
+      if (loginType == LoginType.google) {
+        final newUserName = ToastiesAuthService.getRandomName();
+        debugPrint("--------------- GOOGLE LOGIN");
+        return initializeNewUserProfile(userID, newUserName);
+      }
       return initializeNewUserProfile(userID, userName);
     }
   }
 
   /// initialize a new user's profile data
   static Future<Map<String, dynamic>> initializeNewUserProfile(
-      String userID, String? userName) async {
+    String userID,
+    String? userName,
+  ) async {
     final newSettings = UserSettings();
     final userProfile = UserLocalProfile(
       userName: userName,
       settings: newSettings,
     );
-    final newChat = Chat();
+
+    String newChatID = chatCollection.doc().id;
+    print("????????????????????????????????????????? $newChatID");
+
+    final newCurrentChat = Chat(
+      chatID: newChatID,
+      chatName: "New Consultation",
+      timeSaved: Timestamp.now(),
+      msgs: [],
+    );
+    final firestoreChatDocMap = {
+      'currentChatID': newChatID,
+      'savedChatsIDs': FieldValue.arrayUnion([]),
+    };
+
     final savedChats = [];
 
     Map<String, dynamic> returnMap = {
       'userProfile': userProfile,
-      'currentChat': newChat,
+      'currentChat': newCurrentChat,
       'savedChats': savedChats,
     };
 
-    // await userProfileDocRef(userID).set({
-    //   'userName': userName ?? "",
-    //   'settings': newSettings.toJson(),
+    await userProfileDocRef(userID).set(userProfile.toMap());
+
+    // await chatsDocRef(userID).set({
+    //   'currentChat': newCurrentChat.toMap(),
     // });
-    await userProfileDocRef(userID).set(userProfile.toJson());
+    await chatsDocRef(userID).set(firestoreChatDocMap);
 
-    await chatsDocRef(userID).set({
-      'currentChat': newChat.toMap(),
-    });
+    await ToastiesFirebaseStorageServices.createNewChatFolder(
+      userID: userID,
+      newCurrentChatID: newChatID,
+      currentChatMap: newCurrentChat.toJson(),
+    );
 
-    await savedChatCollection(userID).doc("default").set({
-      'alert': "DO NOT READ THIS DOCUMENT",
-    });
+    // await savedChatCollection(userID).doc("default").set({
+    //   'alert': "DO NOT READ THIS DOCUMENT",
+    // });
 
     return returnMap;
   }
@@ -131,70 +167,15 @@ class ToastiesFirestoreServices {
   }
 
   /// get a Future of the user's currentChat data from firestore
-  static Future<Map<String, dynamic>> getCurrentChatData(String userID) {
+  static Future<String> getCurrentChatID(String userID) {
     return chatsDocRef(userID).get().then((docSnap) {
-      var data = docSnap.data()?["currentChat"] as Map<String, dynamic>;
+      var data = docSnap.data()?["currentChatID"] as String;
       if (docSnap.exists) {
-        return Future<Map<String, dynamic>>.value(data);
+        return Future<String>.value(data);
       } else {
-        return Future<Map<String, dynamic>>.value({});
+        return Future<String>.value("");
       }
     });
-  }
-
-  /// get a Future of the user's currentChat data from firestore
-  static Future<Chat> getCurrentChat(String userID) async {
-    final json = await getCurrentChatData(userID);
-    final currentChat = Chat.fromMap(json);
-    return currentChat;
-  }
-
-  /// get a Future list of all the saved chats from the user's firestore
-  static Future<List<Map<String, dynamic>>> getAllSavedChatData(String userID) {
-    return savedChatCollection(userID).get().then((querySnap) {
-      // var data = querySnap.docs.map((doc) => doc.data()).toList();
-
-      // only get all the saved chats that are not the default one
-      var data = querySnap.docs
-          .where((doc) => doc.id != "default")
-          .map((doc) => doc.data())
-          .toList();
-
-      if (querySnap.docs.isNotEmpty) {
-        return Future<List<Map<String, dynamic>>>.value(data);
-      } else {
-        return Future<List<Map<String, dynamic>>>.value([]);
-      }
-    });
-  }
-
-  /// get a Future list of all the saved chats
-  static Future<List<Chat>> getAllSavedChats(String userID) async {
-    final jsonList = await getAllSavedChatData(userID);
-    final savedChats = jsonList.map((json) => Chat.fromMap(json)).toList();
-    return savedChats;
-  }
-
-  /// get a Future of one specific savedChat, given the chatID
-  static Future<Map<String, dynamic>> getSavedChat(
-      String userID, String chatID) {
-    return savedChatCollection(userID).doc(chatID).get().then((docSnap) {
-      var data = docSnap.data() as Map<String, dynamic>;
-      if (docSnap.exists) {
-        return Future<Map<String, dynamic>>.value(data);
-      } else {
-        return Future<Map<String, dynamic>>.value({});
-      }
-    });
-  }
-
-  /// restore the current chat from the saved chat
-  static Future<void> restoreChat(String userID, String chatID) async {
-    // get the saved chat
-    final savedChat = await getSavedChat(userID, chatID);
-
-    // update the current chat
-    return chatsDocRef(userID).update({"currentChat": savedChat});
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -208,42 +189,20 @@ class ToastiesFirestoreServices {
     return userProfileDocRef(userID).update(data);
   }
 
-  /// update the user's currentChat data
-  static Future<void> updateCurrentChatData(String userID, Chat currentChat) {
-    return chatsDocRef(userID).update({
-      'chatID': currentChat.chatID,
-      'chatName': currentChat.chatName,
-      'currentChat': currentChat.toMap(),
-      'timeSaved': Timestamp.now(),
-    });
-  }
-
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-
-  // /// clear alll docs in the "chat" collection
-  // static Future<void> nukeChatCollection() async {
-  //   final querySnap = await chatCollection.get();
-
-  //   for (var doc in querySnap.docs) {
-  //     (doc.id != "PLACEHOLDER") ? doc.reference.delete() : null;
-  //   }
-
-  //   // Future.delayed(const Duration(seconds: 3)).then((value) {
-  //   //   for (var doc in querySnap.docs) {
-  //   //     doc.reference.collection("savedChats").get().then(
-  //   //       (subQuerySnap) {
-  //   //         for (var doc in subQuerySnap.docs) {
-  //   //           doc.reference.delete();
-  //   //         }
-  //   //       },
-  //   //     );
-  //   //   }
-  //   // });
-
+  // /// update the user's currentChat data
+  // static Future<void> updateCurrentChatData(String userID, Chat currentChat) {
+  //   return chatsDocRef(userID).update({
+  //     'chatID': currentChat.chatID,
+  //     'chatName': currentChat.chatName,
+  //     'currentChat': currentChat.toMap(),
+  //     'timeSaved': Timestamp.now(),
+  //   });
   // }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////
 
   // /// clear alll docs in the "user_profile" collection
   // static Future<void> nukeUserProfileCollection() async {
@@ -260,24 +219,29 @@ class ToastiesFirestoreServices {
 
   static spoofData(String userID) async {
     /// initialize a new user's profile data{
-    final newChat = Chat(msgs: [
-      Message(
-        timeCreated: Timestamp.now(),
-        isMsgUser: true,
-        content: "Hello LAILA",
-      ),
-      Message(
-        timeCreated: Timestamp.now(),
-        isMsgUser: false,
-        content:
-            "My name is LAILA (lˈe͡ɪlə), your legal assistant👋. Happy to be in your service! Let me know what I can do for you. To communicate with me, you can type ⌨️, take a photo 📸, or just talk with me 🎙️.",
-      ),
-      Message(
-        timeCreated: Timestamp.now(),
-        isMsgUser: true,
-        content: "How are you?",
-      ),
-    ]);
+    final newChat = Chat(
+      chatID: "",
+      chatName: "New Consultation",
+      timeSaved: Timestamp.now(),
+      msgs: [
+        Message(
+          timeCreated: Timestamp.now(),
+          isMsgUser: true,
+          content: "Hello LAILA",
+        ),
+        Message(
+          timeCreated: Timestamp.now(),
+          isMsgUser: false,
+          content:
+              "My name is LAILA (lˈe͡ɪlə), your legal assistant👋. Happy to be in your service! Let me know what I can do for you. To communicate with me, you can type ⌨️, take a photo 📸, or just talk with me 🎙️.",
+        ),
+        Message(
+          timeCreated: Timestamp.now(),
+          isMsgUser: true,
+          content: "How are you?",
+        ),
+      ],
+    );
 
     await chatsDocRef(userID).update({
       'currentChat': newChat.toMap(),

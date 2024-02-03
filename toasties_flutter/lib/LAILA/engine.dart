@@ -31,7 +31,7 @@ class LAILA {
     
     List<Content> tempContentList = [];
     
-    for (var msg in chat.msgs!) {
+    for (var msg in chat.msgs) {
       if (msg.isMsgUser) {
         tempContentList.add(_getUserContent(msg));
       } else {

@@ -48,7 +48,6 @@ class Message {
     return {
       'timeCreated': timeCreatedString,
       'isMsgUser': isMsgUser,
-      // 'content': processedContent,
       'content': content,
     };
   }

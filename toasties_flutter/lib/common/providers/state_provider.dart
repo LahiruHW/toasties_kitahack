@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:toasties_flutter/LAILA/engine.dart';
+import 'package:toasties_flutter/common/constants/enum_login_types.dart';
 import 'package:toasties_flutter/common/entity/index.dart';
 import 'package:toasties_flutter/common/utility/toastie_auth.dart';
+import 'package:toasties_flutter/common/utility/toastie_storage_services.dart';
 import 'package:toasties_flutter/common/utility/toasties_firestore_services.dart';
 
 /// Provider for the current user instance
@@ -10,7 +13,7 @@ class ToastieStateProvider extends ChangeNotifier {
   User? user;
   UserLocalProfile userProfile = UserLocalProfile(settings: UserSettings());
   Chat? currentChat;
-  List<Chat>? savedChats;
+  List<Chat> savedChats = [];
   final authService = ToastiesAuthService();
 
   ToastieStateProvider() {
@@ -27,9 +30,11 @@ class ToastieStateProvider extends ChangeNotifier {
       (userCred) async {
         final dataMap = await ToastiesFirestoreServices.setupUserProfile(
             userCred.user!.uid, null);
-        userProfile = dataMap['userProfile'];
-        currentChat = dataMap['currentChat'];
-        savedChats = dataMap['savedChats'];
+        userProfile = dataMap['userProfile'] as UserLocalProfile;
+        currentChat = dataMap['currentChat'] as Chat;
+        savedChats = (dataMap['savedChats'] as List)
+            .map((e) => Chat.fromMap(e))
+            .toList();
         convertCurrentChatToContentList();
         notifyListeners();
       },
@@ -42,12 +47,16 @@ class ToastieStateProvider extends ChangeNotifier {
   Future<void> signInWithGoogle() async {
     await authService.signInWithGoogle().then(
       (userCred) async {
-        // wait for the sign in to complete and then setup the user profile
         final dataMap = await ToastiesFirestoreServices.setupUserProfile(
-            userCred.user!.uid, null);
-        userProfile = dataMap['userProfile'];
-        currentChat = dataMap['currentChat'];
-        savedChats = dataMap['savedChats'];
+          userCred.user!.uid,
+          null,
+          loginType: LoginType.google,
+        );
+        userProfile = dataMap['userProfile'] as UserLocalProfile;
+        currentChat = dataMap['currentChat'] as Chat;
+        savedChats = (dataMap['savedChats'] as List)
+            .map((e) => Chat.fromMap(e))
+            .toList();
         convertCurrentChatToContentList();
         notifyListeners();
       },
@@ -66,9 +75,11 @@ class ToastieStateProvider extends ChangeNotifier {
       (userCred) async {
         final dataMap = await ToastiesFirestoreServices.setupUserProfile(
             userCred.user!.uid, userName);
-        userProfile = dataMap['userProfile'];
-        currentChat = dataMap['currentChat'];
-        savedChats = dataMap['savedChats'];
+        userProfile = dataMap['userProfile'] as UserLocalProfile;
+        currentChat = dataMap['currentChat'] as Chat;
+        savedChats = (dataMap['savedChats'] as List)
+            .map((e) => Chat.fromMap(e))
+            .toList();
         convertCurrentChatToContentList();
         notifyListeners();
       },
@@ -77,10 +88,8 @@ class ToastieStateProvider extends ChangeNotifier {
     );
   }
 
-
-  /// saved the current chat to the user's saved chats
-  void updateCurrentChat() async {
-    await ToastiesFirestoreServices.updateCurrentChatData(user!.uid, currentChat!);
+  void addToCurrentChat(Message msg) {
+    currentChat!.addMessage(msg);
     notifyListeners();
   }
 
@@ -113,7 +122,7 @@ class ToastieStateProvider extends ChangeNotifier {
     user = null;
     userProfile = UserLocalProfile(settings: UserSettings());
     currentChat = null;
-    savedChats = null;
+    savedChats = [];
     LAILA.shutdownEngine();
     debugPrint(
         '------------------------------ StateProvider user signed out & cleared');
@@ -126,6 +135,7 @@ class ToastieStateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// update the user's profile data via the state provider
   void updateSettings({
     bool? isDarkMode,
   }) {
@@ -133,5 +143,19 @@ class ToastieStateProvider extends ChangeNotifier {
       isDarkMode: isDarkMode,
     );
     notifyListeners();
+  }
+
+  /// update the chat folder in the database with the user's current chat data
+  Future<void> updateCurrentChatInFirebaseStorageTEMP() async {
+    currentChat!.timeSaved = Timestamp.now();
+    final userID = user!.uid;
+    final currentChatData = currentChat!.toJson();
+    debugPrint('----------------- updated current chat in firebase storage');
+
+    return await ToastiesFirebaseStorageServices.writeCurrentChatFile(
+      userID,
+      currentChat!.chatID,
+      currentChatData,
+    );
   }
 }
